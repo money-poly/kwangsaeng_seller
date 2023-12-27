@@ -36,4 +36,7 @@ class KwangStyle {
   static final TextStyle paragraph = base.copyWith(fontSize: 14, height: 24 / 14, fontWeight: FontWeight.w400, letterSpacing: -0.5);
 
   static final TextStyle navigationLabel = base.copyWith(fontSize: 10, height: 12 / 10, fontWeight: FontWeight.w700);
+  static final TextStyle appBarBase = base.copyWith(fontFamily: "Sejong", fontWeight: FontWeight.w700, leadingDistribution: TextLeadingDistribution.even);
+  static final TextStyle appBar1 = appBarBase.copyWith(fontSize: 20, textBaseline: TextBaseline.alphabetic);
+  static final TextStyle appBar2 = appBarBase.copyWith(fontSize: 18);
 }
