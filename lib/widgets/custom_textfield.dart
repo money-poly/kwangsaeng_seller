@@ -15,6 +15,7 @@ class CustomTextField extends StatelessWidget {
     this.isObsecure = false,
     this.isVisibleMaxLength = false,
     this.currLength = 0,
+    this.readOnly = false,
   });
 
   final TextEditingController controller;
@@ -26,6 +27,7 @@ class CustomTextField extends StatelessWidget {
   final bool isObsecure;
   final bool isVisibleMaxLength;
   final int currLength;
+  final bool readOnly;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -37,6 +39,7 @@ class CustomTextField extends StatelessWidget {
           inputFormatters: inputFormatters,
           maxLength: maxLength,
           obscureText: isObsecure,
+          readOnly: readOnly,
           autovalidateMode: AutovalidateMode.onUserInteraction,
           style: KwangStyle.body1,
           decoration: InputDecoration(
