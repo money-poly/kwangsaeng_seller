@@ -17,6 +17,7 @@ class KwangColor {
   static const primary300 = Color(0xFF587761);
   static const primary400 = Color(0xFF3D5D47);
 
+  static const secondary100 = Color(0xFFF2F7F4);
   static const secondary400 = Color(0xFF39997F);
 
   static const red = Color(0xFFEE3C32);
