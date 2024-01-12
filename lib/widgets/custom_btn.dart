@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:kwangsaeng_seller/styles/color.dart';
 import 'package:kwangsaeng_seller/styles/txt.dart';
 
 class CustomBtn extends StatelessWidget {
@@ -8,17 +7,19 @@ class CustomBtn extends StatelessWidget {
       required this.txt,
       required this.txtColor,
       required this.bgColor,
-      required this.onTap});
+      required this.onTap,
+      this.height = 52});
   final String txt;
   final Color txtColor;
   final Color bgColor;
   final Function() onTap;
+  final double height;
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        height: 52,
+        height: height,
         alignment: Alignment.center,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
@@ -26,7 +27,7 @@ class CustomBtn extends StatelessWidget {
         ),
         child: Text(
           txt,
-          style: KwangStyle.btn2B.copyWith(color: KwangColor.grey100),
+          style: KwangStyle.btn2B.copyWith(color: txtColor),
         ),
       ),
     );
