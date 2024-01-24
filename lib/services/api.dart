@@ -69,7 +69,7 @@ class API {
       type: UrlType.dev,
     );
     if (res.statusCode == 201) {
-      await saveToken(res.body);
+      await saveToken(res);
     } else {
       throw Exception("http Exception");
     }
