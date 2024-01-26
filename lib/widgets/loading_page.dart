@@ -2,16 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:kwangsaeng_seller/styles/color.dart';
 
 class LoadingPage extends StatelessWidget {
-  const LoadingPage({super.key});
+  const LoadingPage({super.key, this.color = KwangColor.secondary100});
 
+  final Color color;
   @override
   Widget build(BuildContext context) {
-    return const AbsorbPointer(
+    return AbsorbPointer(
       absorbing: true,
       child: Center(
         child: CircularProgressIndicator(
           strokeWidth: 4,
-          color: KwangColor.secondary100,
+          color: color,
         ),
       ),
     );
