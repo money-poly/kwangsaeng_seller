@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kwangsaeng_seller/screens/home/home_view.dart';
 
 enum NavItems {
   home("홈"),
@@ -12,6 +13,7 @@ enum NavItems {
 class NavViewModel with ChangeNotifier {
   int _currIdx = 0;
   final List<Widget> _pages = [
+    const HomeView(),
     const Placeholder(),
     const Placeholder(),
     const Placeholder(),
