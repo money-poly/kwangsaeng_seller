@@ -21,6 +21,11 @@ if (flutterVersionName == null) {
     flutterVersionName = '1.0'
 }
 
+def googleMapKey = localProperties.getProperty('google.map.key')
+if (googleMapKey == null) {
+    throw GradleException("Google Map Key not found.")
+}
+
 apply plugin: 'com.android.application'
 // START: FlutterFire Configuration
 apply plugin: 'com.google.gms.google-services'
@@ -51,10 +56,11 @@ android {
         applicationId "com.example.kwangsaeng_seller"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
-        minSdkVersion 19 //flutter.minSdkVersion
+        minSdkVersion 20 //flutter.minSdkVersion
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
+        manifestPlaceholders = [googleMapKey : googleMapKey, applicationName: "io.flutter.app.FlutterApplication"]
     }
 
     buildTypes {

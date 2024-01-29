@@ -50,6 +50,7 @@ dependencies:
   flutter_styled_toast: ^2.2.1
   shared_preferences: ^2.2.2
   url_launcher: ^6.1.14
+  google_maps_flutter: ^2.5.3
 
 dev_dependencies:
   flutter_test:
