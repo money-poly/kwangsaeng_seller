@@ -28,7 +28,7 @@ Future<bool> checkValidToken() async {
     if (accessTokenExp.isBefore(DateTime.now()) ||
         refreshTokenExp.isBefore(DateTime.now())) {
       try {
-        api.refreshToken();
+        await api.refreshToken();
         return true;
       } catch (e) {
         return false;

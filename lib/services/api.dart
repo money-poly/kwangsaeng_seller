@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
+import 'package:kwangsaeng_seller/utils.dart/custom_exception.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 enum HttpMethod {
@@ -21,10 +22,15 @@ class API {
       {body, UrlType type = UrlType.dummy, bool needToken = false}) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    if (needToken && prefs.getString("accessTokenExp") != null) {
+    if (needToken && prefs.getString("accessTokenExp") != null && prefs.getString("accessToken") != null) {
       final DateTime accessTokenExp =
           DateTime.parse(prefs.getString("accessTokenExp")!);
-      if (accessTokenExp.isBefore(DateTime.now())) {
+      final DateTime refreshTokenExp =
+          DateTime.parse(prefs.getString("refreshTokenExp")!);
+      if (refreshTokenExp.isBefore(DateTime.now())) {
+        throw CustomException(ErrorCode.tokenExpired);
+      }
+      else if (accessTokenExp.isBefore(DateTime.now())) {
         await refreshToken();
       }
     }
