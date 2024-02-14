@@ -8,14 +8,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 class HomeService {
   final _api = API();
 
-  Future<HomeStore> getStoreInfo() async {
+  Future<StoreHome> getStoreInfo() async {
     final prefs = await SharedPreferences.getInstance();
     final res = await _api.req(
         "/stores/basic/${prefs.getString("storeId")}", HttpMethod.get,
         type: UrlType.dev, needToken: true);
-
+    
     if (res.statusCode == 200) {
-      return HomeStore.fromJson(jsonDecode(res.body)["data"]);
+      return StoreHome.fromJson(jsonDecode(res.body)["data"]);
     } else {
       throw Exception("http Exception");
     }

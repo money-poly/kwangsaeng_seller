@@ -20,7 +20,7 @@ class HomeViewModel with ChangeNotifier {
 
   bool _isLoading = true;
   bool _isChangeLoading = false;
-  HomeStore? _store;
+  StoreHome? _store;
   StoreStatus? _status;
   int? _selectedTag;
   List<Tag> _tags = [];
@@ -28,7 +28,7 @@ class HomeViewModel with ChangeNotifier {
   bool get isLoading => _isLoading;
   bool get isChangeLoading => _isChangeLoading;
   StoreStatus? get status => _status;
-  HomeStore? get store => _store;
+  StoreHome? get store => _store;
   int? get selectedTag => _selectedTag;
   List<Tag> get tags => _tags;
 
