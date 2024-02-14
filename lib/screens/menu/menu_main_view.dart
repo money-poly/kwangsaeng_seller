@@ -108,6 +108,11 @@ class MenuMainView extends StatelessWidget {
               ),
         floatingActionButton: GestureDetector(
           onTap: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => const MenuRegisterView(),
+              ),
+            );
           },
           child: Container(
             width: 143,
