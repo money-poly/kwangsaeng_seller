@@ -49,5 +49,7 @@
 	<true/>
 	<key>GoogleMapKey</key>
 	<string>$(GOOGLE_MAP_KEY)</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>"광생"이 메뉴 및 가게 사진 업로드를 위해 사진첩에 접근하는 것을 허용합니다.</string>
 </dict>
 </plist>
