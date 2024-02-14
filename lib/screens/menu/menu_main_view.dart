@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:kwangsaeng_seller/screens/menu/menu_main_view_model.dart';
 import 'package:kwangsaeng_seller/screens/menu/menu_order_view.dart';
 import 'package:kwangsaeng_seller/screens/menu/menu_order_view_model.dart';
+import 'package:kwangsaeng_seller/screens/menu/menu_register_view.dart';
 import 'package:kwangsaeng_seller/screens/menu/widgets/menu_tile.dart';
 import 'package:kwangsaeng_seller/styles/color.dart';
 import 'package:kwangsaeng_seller/styles/txt.dart';
@@ -24,25 +25,22 @@ class MenuMainView extends StatelessWidget {
       return Scaffold(
         backgroundColor: KwangColor.grey200,
         appBar: AppBar(
-          title: Padding(
-            padding: const EdgeInsets.only(left: 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text("메뉴 관리", style: KwangStyle.header1),
-                const SizedBox(width: 16),
-                GestureDetector(
-                  onTap: () {},
-                  behavior: HitTestBehavior.translucent,
-                  child: Text(
-                    "미리보기",
-                    style: KwangStyle.btn2SB
-                        .copyWith(color: KwangColor.secondary400),
-                  ),
-                )
-              ],
-            ),
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text("메뉴 관리", style: KwangStyle.header1),
+              const SizedBox(width: 16),
+              GestureDetector(
+                onTap: () {},
+                behavior: HitTestBehavior.translucent,
+                child: Text(
+                  "미리보기",
+                  style: KwangStyle.btn2SB
+                      .copyWith(color: KwangColor.secondary400),
+                ),
+              )
+            ],
           ),
           actions: [
             Padding(
@@ -78,6 +76,7 @@ class MenuMainView extends StatelessWidget {
               ),
             )
           ],
+          titleSpacing: 20,
           toolbarHeight: 48,
           centerTitle: false,
           backgroundColor: KwangColor.grey200,

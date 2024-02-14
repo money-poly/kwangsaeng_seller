@@ -25,7 +25,7 @@ class StorePreviewView extends StatelessWidget {
             backgroundColor: KwangColor.grey100,
             appBar: AppBar(
               title: Text("매장 상세", style: KwangStyle.header2),
-              toolbarHeight: 64,
+              toolbarHeight: 44,
               titleSpacing: 8,
               centerTitle: false,
               leading: Padding(
