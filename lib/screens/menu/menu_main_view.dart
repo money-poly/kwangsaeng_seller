@@ -106,6 +106,37 @@ class MenuMainView extends StatelessWidget {
                   ),
                 ),
               ),
+        floatingActionButton: GestureDetector(
+          onTap: () {
+          },
+          child: Container(
+            width: 143,
+            decoration: BoxDecoration(
+              color: KwangColor.secondary400,
+              borderRadius: BorderRadius.circular(22),
+            ),
+            padding: const EdgeInsets.fromLTRB(16, 10, 12, 10),
+            child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    "메뉴 추가하기",
+                    style:
+                        KwangStyle.btn1SB.copyWith(color: KwangColor.grey100),
+                  ),
+                  const SizedBox(width: 4),
+                  SvgPicture.asset(
+                    "assets/icons/ic_24_add.svg",
+                    width: 24,
+                    height: 24,
+                    colorFilter: const ColorFilter.mode(
+                        KwangColor.grey100, BlendMode.srcIn),
+                  )
+                ]),
+          ),
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       );
     }
   }
