@@ -65,10 +65,14 @@ class _CustomTextFieldState extends State<CustomTextField> {
               obscureText: widget.isObsecure,
               readOnly: widget.readOnly,
               autovalidateMode: AutovalidateMode.onUserInteraction,
-              style: KwangStyle.body1,
+              style: widget.maxLines == 1
+                  ? KwangStyle.body1
+                  : KwangStyle.paragraph,
               decoration: InputDecoration(
                 hintText: widget.hintText,
-                hintStyle: KwangStyle.body1.copyWith(color: KwangColor.grey600),
+                hintStyle: widget.maxLines == 1
+                    ? KwangStyle.body1.copyWith(color: KwangColor.grey600)
+                    : KwangStyle.paragraph.copyWith(color: KwangColor.grey600),
                 errorStyle: KwangStyle.body2.copyWith(color: KwangColor.red),
                 counterText: "",
                 contentPadding:
