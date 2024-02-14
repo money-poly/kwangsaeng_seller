@@ -15,8 +15,7 @@ class NavViewModel with ChangeNotifier {
   final List<Widget> _pages = [
     const HomeView(),
     const Placeholder(),
-    const Placeholder(),
-    const Placeholder(),
+    const MenuMainView(),
   ];
 
   int get currIdx => _currIdx;
