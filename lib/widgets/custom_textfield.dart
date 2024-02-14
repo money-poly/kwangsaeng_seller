@@ -18,6 +18,7 @@ class CustomTextField extends StatefulWidget {
     this.readOnly = false,
     this.icon,
     this.prompt,
+    this.maxLines = 1,
   });
 
   final TextEditingController controller;
@@ -32,6 +33,7 @@ class CustomTextField extends StatefulWidget {
   final bool readOnly;
   final Widget? icon;
   final String? prompt;
+  final int maxLines;
 
   @override
   State<CustomTextField> createState() => _CustomTextFieldState();
@@ -57,6 +59,8 @@ class _CustomTextFieldState extends State<CustomTextField> {
               }),
               keyboardType: widget.keyboardType,
               inputFormatters: widget.inputFormatters,
+              minLines: widget.maxLines,
+              maxLines: widget.maxLines,
               maxLength: widget.maxLength,
               obscureText: widget.isObsecure,
               readOnly: widget.readOnly,
@@ -138,7 +142,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
           ),
         if (widget.isVisibleMaxLength)
           Padding(
-            padding: const EdgeInsets.only(top: 4),
+            padding: const EdgeInsets.only(top: 8),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
