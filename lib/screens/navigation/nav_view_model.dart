@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kwangsaeng_seller/screens/home/home_view.dart';
+import 'package:kwangsaeng_seller/screens/menu/menu_main_view.dart';
+import 'package:kwangsaeng_seller/screens/setting/setting_main_view.dart';
 
 enum NavItems {
   home("홈"),

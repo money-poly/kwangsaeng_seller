@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
+import 'package:kwangsaeng_seller/main.dart';
 import 'package:kwangsaeng_seller/screens/join/join_view.dart';
 import 'package:kwangsaeng_seller/screens/join/join_view_model.dart';
-import 'package:kwangsaeng_seller/screens/navigation/nav_view.dart';
-import 'package:kwangsaeng_seller/screens/navigation/nav_view_model.dart';
 import 'package:kwangsaeng_seller/screens/register/register_view.dart';
 import 'package:kwangsaeng_seller/screens/register/register_view_model.dart';
 import 'package:kwangsaeng_seller/screens/start/start_view_model.dart';
@@ -112,11 +111,8 @@ class StartView extends StatelessWidget {
                                 case StoreRegisterStatus.done:
                                   Navigator.of(context).pushAndRemoveUntil(
                                     MaterialPageRoute(
-                                      builder: (context) =>
-                                          ChangeNotifierProvider(
-                                              create: (_) => NavViewModel(),
-                                              child: const NavView()),
-                                    ),
+                                        builder: (context) => const MyApp(
+                                            pageType: PageType.home)),
                                     (route) => false,
                                   );
                               }

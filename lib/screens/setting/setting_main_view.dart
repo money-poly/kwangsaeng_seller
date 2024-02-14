@@ -2,6 +2,7 @@ import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:kwangsaeng_seller/screens/setting/widgets/setting_btn.dart';
+import 'package:kwangsaeng_seller/screens/store/store_modify_view.dart';
 import 'package:kwangsaeng_seller/styles/color.dart';
 import 'package:kwangsaeng_seller/styles/txt.dart';
 
@@ -31,7 +32,14 @@ class SettingMainView extends StatelessWidget {
                     Text("파리바게트 광운대점", style: KwangStyle.header1),
                     const SizedBox(height: 8),
                     GestureDetector(
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const StoreModifyView(),
+                          ),
+                        );
+                      },
                       child: Container(
                         padding: const EdgeInsets.fromLTRB(16, 8, 12, 8),
                         decoration: BoxDecoration(

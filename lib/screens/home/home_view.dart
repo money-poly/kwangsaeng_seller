@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:kwangsaeng_seller/screens/home/home_view_model.dart';
 import 'package:kwangsaeng_seller/screens/home/widgets/tag_bottom_sheet.dart';
 import 'package:kwangsaeng_seller/screens/store/store_preview_view.dart';
+import 'package:kwangsaeng_seller/screens/store/store_preview_view_model.dart';
 import 'package:kwangsaeng_seller/styles/color.dart';
 import 'package:kwangsaeng_seller/styles/txt.dart';
 import 'package:kwangsaeng_seller/widgets/loading_page.dart';
@@ -140,7 +141,12 @@ class HomeView extends StatelessWidget {
                                             Navigator.of(context).push(
                                               MaterialPageRoute(
                                                 builder: (context) =>
-                                                    const StorePreviewView(),
+                                                    ChangeNotifierProvider(
+                                                  create: (_) =>
+                                                      StorePreviewViewModel(),
+                                                  child:
+                                                      const StorePreviewView(),
+                                                ),
                                               ),
                                             );
                                           },

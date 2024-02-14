@@ -5,6 +5,8 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:kwangsaeng_seller/firebase_options.dart';
 import 'package:kwangsaeng_seller/screens/home/home_view_model.dart';
+import 'package:kwangsaeng_seller/screens/menu/menu_main_view_model.dart';
+import 'package:kwangsaeng_seller/screens/menu/menu_register_view.dart';
 import 'package:kwangsaeng_seller/screens/navigation/nav_view.dart';
 import 'package:kwangsaeng_seller/screens/navigation/nav_view_model.dart';
 import 'package:kwangsaeng_seller/screens/start/start_view.dart';
@@ -64,6 +66,7 @@ class MyApp extends StatelessWidget {
           PageType.home => MultiProvider(providers: [
               ChangeNotifierProvider(create: (_) => NavViewModel()),
               ChangeNotifierProvider(create: (_) => HomeViewModel()),
+              ChangeNotifierProvider(create: (_) => MenuMainViewModel()),
             ], child: const NavView()),
         },
       ),
