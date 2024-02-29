@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:kwangsaeng_seller/screens/home/home_view.dart';
-import 'package:kwangsaeng_seller/screens/home/home_view_model.dart';
 import 'package:kwangsaeng_seller/screens/register/register_view_model.dart';
 import 'package:kwangsaeng_seller/screens/register/widgets/register_bottom_sheet.dart';
+import 'package:kwangsaeng_seller/screens/start/waiting_view.dart';
 import 'package:kwangsaeng_seller/styles/color.dart';
 import 'package:kwangsaeng_seller/styles/txt.dart';
 import 'package:kwangsaeng_seller/utils.dart/time_formatter.dart';
@@ -371,12 +370,8 @@ class RegisterView extends StatelessWidget {
                                 if (context.mounted) {
                                   Navigator.of(context).push(
                                     MaterialPageRoute(
-                                      builder: (context) =>
-                                          ChangeNotifierProvider(
-                                        create: (_) => HomeViewModel(),
-                                        child: const HomeView(),
-                                      ),
-                                    ),
+                                        builder: (context) =>
+                                            const WaitingView()),
                                   );
                                 }
                               } else {
