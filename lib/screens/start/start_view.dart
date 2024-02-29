@@ -85,42 +85,44 @@ class StartView extends StatelessWidget {
                         bgColor: KwangColor.secondary400,
                         onTap: () async {
                           viewModel.switchIsSubmitted();
-                          viewModel.changeLoading(true);
-                          viewModel.formKey.currentState!.validate();
-                          if (await viewModel.login()) {
-                            if (context.mounted) {
-                              switch (
-                                  await viewModel.getStoreRegisterStatus()) {
-                                case StoreRegisterStatus.before:
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          ChangeNotifierProvider(
-                                              create: (_) =>
-                                                  RegisterViewModel(),
-                                              child: const RegisterView()),
-                                    ),
-                                  );
-                                case StoreRegisterStatus.waiting:
-                                  Navigator.of(context).pushAndRemoveUntil(
-                                    MaterialPageRoute(
-                                      builder: (context) => const WaitingView(),
-                                    ),
-                                    (route) => false,
-                                  );
-                                case StoreRegisterStatus.done:
-                                  Navigator.of(context).pushAndRemoveUntil(
-                                    MaterialPageRoute(
-                                        builder: (context) => const MyApp(
-                                            pageType: PageType.home)),
-                                    (route) => false,
-                                  );
+                          if (viewModel.formKey.currentState!.validate()) {
+                            viewModel.changeLoading(true);
+                            if (await viewModel.login()) {
+                              if (context.mounted) {
+                                switch (
+                                    await viewModel.getStoreRegisterStatus()) {
+                                  case StoreRegisterStatus.before:
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            ChangeNotifierProvider(
+                                                create: (_) =>
+                                                    RegisterViewModel(),
+                                                child: const RegisterView()),
+                                      ),
+                                    );
+                                  case StoreRegisterStatus.waiting:
+                                    Navigator.of(context).pushAndRemoveUntil(
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            const WaitingView(),
+                                      ),
+                                      (route) => false,
+                                    );
+                                  case StoreRegisterStatus.done:
+                                    Navigator.of(context).pushAndRemoveUntil(
+                                      MaterialPageRoute(
+                                          builder: (context) => const MyApp(
+                                              pageType: PageType.home)),
+                                      (route) => false,
+                                    );
+                                }
                               }
+                            } else {
+                              showToast("로그인에 실패했습니다");
                             }
-                          } else {
-                            showToast("로그인에 실패했습니다");
+                            viewModel.changeLoading(false);
                           }
-                          viewModel.changeLoading(false);
                         },
                       ),
                       const SizedBox(height: 20),
