@@ -21,13 +21,8 @@ class WaitingView extends StatelessWidget {
                 flex: 1,
                 child: Container(),
               ),
-              Container(
-                width: 180,
-                height: 180,
-                alignment: Alignment.center,
-                color: KwangColor.grey400,
-                child: const Text("일러스트 임시"),
-              ),
+              Image.asset("assets/imgs/img_280_congratulations.png",
+                  width: 280),
               const SizedBox(height: 24),
               Text(
                 "사장님의 가게를\n등록하고 있습니다!",
