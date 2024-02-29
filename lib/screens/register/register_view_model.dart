@@ -104,9 +104,6 @@ class RegisterViewModel with ChangeNotifier {
       checkAreValidRegister();
     });
     _phoneController.addListener(() {
-      if (phoneController.text.isNotEmpty) {
-        validatePhone();
-      }
       checkAreValidRegister();
     });
     _businessNumberController.addListener(() {

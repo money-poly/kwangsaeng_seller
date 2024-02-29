@@ -79,7 +79,7 @@ class PhoneField extends StatelessWidget {
                     controller: viewModel.phoneController,
                     hintText: "-없이 숫자만 입력해주세요",
                     validator: (input) {
-                      if (viewModel.phoneController.text.isEmpty) {
+                      if (!viewModel.isValidPhone) {
                         return "";
                       }
                       return null;
