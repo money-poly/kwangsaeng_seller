@@ -272,6 +272,7 @@ class JoinView extends StatelessWidget {
                             txtColor: KwangColor.grey600,
                             bgColor: KwangColor.grey300,
                             onTap: () {
+                              viewModel.checkAreValid();
                               viewModel.formKey.currentState!.validate();
                               // viewModel.switchIsSubmitted();
                             })),
