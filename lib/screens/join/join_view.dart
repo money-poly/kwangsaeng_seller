@@ -274,7 +274,6 @@ class JoinView extends StatelessWidget {
                             onTap: () {
                               viewModel.checkAreValid();
                               viewModel.formKey.currentState!.validate();
-                              // viewModel.switchIsSubmitted();
                             })),
               ),
               if (viewModel.isLoading) const LoadingPage()

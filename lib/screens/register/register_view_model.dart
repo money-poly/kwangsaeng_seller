@@ -270,7 +270,7 @@ class RegisterViewModel with ChangeNotifier {
   }
 
   /* 가게 등록 */
-  Future<bool> regiseter() async {
+  Future<bool> register() async {
     if (await _service.registerStore(
         _nameController.text,
         _storeNameController.text,

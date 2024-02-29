@@ -47,7 +47,6 @@ class JoinViewModel with ChangeNotifier {
   int get authTime => _authTime;
   bool? get authSuccess => _authSuccess;
 
-  // bool get isSubmitted => _isSubmitted;
   bool get areValidJoin => _areValidJoin;
   bool get isLoading => _isLoading;
 
@@ -74,11 +73,6 @@ class JoinViewModel with ChangeNotifier {
       checkAreValid();
     });
   }
-
-  // void switchIsSubmitted() {
-  //   _isSubmitted = true;
-  //   notifyListeners();
-  // }
 
   void changeAuthStatus(AuthNumberBtnType status) {
     switch (status) {

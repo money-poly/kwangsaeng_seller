@@ -164,7 +164,7 @@ class RegisterView extends StatelessWidget {
                                 ),
                               ),
                               const SizedBox(height: 20),
-                              const TextFieldTitle(title: "가게주소"),
+                              const TextFieldTitle(title: "가게 주소"),
                               GestureDetector(
                                 onTap: () async {
                                   KopoModel? model = await Navigator.push(
@@ -367,7 +367,7 @@ class RegisterView extends StatelessWidget {
                             viewModel.checkAreValidRegister();
                             if (viewModel.areValidRegister) {
                               viewModel.changeIsRegistering(true);
-                              if (await viewModel.regiseter()) {
+                              if (await viewModel.register()) {
                                 if (context.mounted) {
                                   Navigator.of(context).push(
                                     MaterialPageRoute(
