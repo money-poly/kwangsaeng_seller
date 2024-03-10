@@ -103,36 +103,38 @@ class MenuRegisterView extends StatelessWidget {
                                   },
                                   icon: Padding(
                                     padding: const EdgeInsets.only(right: 16),
-                                    child: Text(
-                                      "원",
-                                      style: KwangStyle.body1,
+                                  child:
+                                      ImgUploadCard(imgUrl: viewModel.imgUrl)),
+                              if (viewModel.imgUrl != null)
+                                Positioned(
+                                  top: 0,
+                                  right: 0,
+                                  child: Container(
+                                    width: 24,
+                                    height: 24,
+                                    padding: const EdgeInsets.all(3),
+                                    decoration: BoxDecoration(
+                                      color: KwangColor.grey100,
+                                      shape: BoxShape.circle,
+                                      border:
+                                          Border.all(color: KwangColor.grey500),
                                     ),
+                                    child: SvgPicture.asset(
+                                        "assets/icons/ic_16_close.svg"),
                                   ),
-                                ),
-                              ],
-                            ),
+                                )
+                            ],
                           ),
-                          const SizedBox(width: 20),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const TextFieldTitle(title: "판매가"),
-                                CustomTextField(
-                                  controller: TextEditingController(),
-                                  hintText: "0",
-                                  inputFormatters: [
-                                    FilteringTextInputFormatter.digitsOnly
-                                  ],
-                                  keyboardType: TextInputType.number,
-                                  validator: (input) {
-                                    return null;
-                                  },
-                                  icon: Padding(
-                                    padding: const EdgeInsets.only(right: 16),
-                                    child: Text(
-                                      "원",
-                                      style: KwangStyle.body1,
+                        ),
+                        const TextFieldTitle(title: "메뉴명"),
+                        CustomTextField(
+                          controller: viewModel.nameController,
+                          hintText: "메뉴명을 입력해주세요",
+                          validator: (input) {
+                            return null;
+                          },
+                          maxLength: 20,
+                          isVisibleMaxLength: true,
                                     ),
                                   ),
                                 ),

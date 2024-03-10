@@ -57,8 +57,8 @@ class StoreDetail {
   List<Menu> menu;
   List<String> notes;
   List<Origin> origins;
+  String phone;
   /* Optional */
-  String? phone;
   String? imgUrl;
 
   StoreDetail({
@@ -73,7 +73,7 @@ class StoreDetail {
     required this.menu,
     required this.notes,
     required this.origins,
-    this.phone,
+    required this.phone,
     this.imgUrl,
   });
 
@@ -87,8 +87,9 @@ class StoreDetail {
     return StoreDetail(
       id: json['id'],
       name: json['name'],
-      categories:
-          (json['categories'] as List).map((e) => e.toString()).toList(),
+      categories: (json['categories'] as List)
+          .map((e) => e['name'].toString())
+          .toList(),
       address: json['detail']['address'] +
           " " +
           (json['detail']['addressDetail'] ?? ""),
@@ -96,15 +97,15 @@ class StoreDetail {
         double.parse(json['detail']['lat']),
         double.parse(json['detail']['lon']),
       ),
-      pickUpTime: json['detail']['pickupTime'],
+      pickUpTime: json['detail']['pickUpTime'],
       openTime: json['detail']['operationTimes']['startedAt'],
       closeTime: json['detail']['operationTimes']['endedAt'],
       menu: (json['menus'] as List).map((e) => Menu.fromStoreJson(e)).toList(),
       notes: (json['caution'] as List).map((e) => e.toString()).toList(),
       origins: origins,
+      phone: json['detail']['phone'],
       /* Optional */
-      phone: json['phone'],
-      imgUrl: json['storePictureUrl'],
+      imgUrl: json['detail']['storePictureUrl'],
     );
   }
 }
