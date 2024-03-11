@@ -3,15 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:kwangsaeng_seller/models/origin.dart';
 import 'package:kwangsaeng_seller/models/tag.dart';
 import 'package:kwangsaeng_seller/styles/color.dart';
+import 'package:kwangsaeng_seller/utils.dart/menu_status_util.dart';
 
 enum MenuStatus {
-  sale("판매중", KwangColor.secondary400),
-  hidden("숨김", KwangColor.grey400),
-  soldout("품절", KwangColor.red);
+  sale("판매중", KwangColor.secondary400, "고객들에게 판매할 수 있는 상태"),
+  hidden("숨김", KwangColor.grey600, "일시적으로 숨김처리되어 메뉴가 보이지 않는 상태"),
+  soldout("품절", KwangColor.red, "메뉴는 노출되지만 품절 표시인 상태");
 
-  const MenuStatus(this.str, this.color);
+  const MenuStatus(this.str, this.color, this.description);
   final String str;
   final Color color;
+  final String description;
 }
 
 // ignore: must_be_immutable
@@ -49,8 +51,9 @@ class Menu extends Equatable {
         name: json['name'],
         discountRate: json['discountRate'],
         discountPrice: json['sellingPrice'],
-        imgUrl: json['menuPictureUrl'],
         /* Optional */
+        status: strToMenuStatus(json['status']),
+        imgUrl: json['menuPictureUrl'],
         regularPrice: json['price'],
         description: json['description'],
         store: json['storeName'],
@@ -64,8 +67,8 @@ class Menu extends Equatable {
         name: json['name'],
         discountRate: json['discountRate'],
         discountPrice: json['salePrice'],
-        imgUrl: json['menuPictureUrl'],
         /* Optional */
+        imgUrl: json['menuPictureUrl'],
         regularPrice: json['price'],
         description: json['description'],
         store: json['storeName'],
