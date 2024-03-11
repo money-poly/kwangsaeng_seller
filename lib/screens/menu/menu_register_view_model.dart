@@ -115,10 +115,10 @@ class MenuRegisterViewModel with ChangeNotifier {
   }
 
   void validateAll() {
-    formKey.currentState!.validate();
     _areValidatedPrices = true;
     checkAreValidPrices();
     checkAreValidOrigins();
+    formKey.currentState!.validate();
     notifyListeners();
   }
 

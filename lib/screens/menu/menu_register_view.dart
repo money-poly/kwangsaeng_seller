@@ -135,7 +135,6 @@ class MenuRegisterView extends StatelessWidget {
                     txtColor: KwangColor.grey100,
                     bgColor: KwangColor.secondary400,
                     onTap: () async {
-                      viewModel.formKey.currentState!.validate();
                       viewModel.validateAll();
                       if (viewModel.checkAreAllValid()) {
                         await viewModel.register().then((value) {
