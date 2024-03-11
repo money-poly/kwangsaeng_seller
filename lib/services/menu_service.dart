@@ -21,7 +21,7 @@ class MenuService {
     }
   }
 
-  Future<bool> registerMenu(String name, String? description, int regularPrice,
+  Future<bool> registerMenu(String name, String description, int regularPrice,
       int discountPrice, double discountRate, List<Origin> origins) async {
     final prefs = await SharedPreferences.getInstance();
     // print(
@@ -50,8 +50,8 @@ class MenuService {
           "price": regularPrice,
           "salePrice": discountPrice,
           "discountRate": discountRate,
-          /* Optional */
           "description": description,
+          /* Optional */
           "countryOfOrigin": origins.map((e) => e.toJson()).toList(),
         }),
         type: UrlType.dev,
