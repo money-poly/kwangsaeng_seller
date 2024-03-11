@@ -5,9 +5,11 @@ import 'package:kwangsaeng_seller/styles/color.dart';
 import 'package:kwangsaeng_seller/styles/txt.dart';
 
 class MenuStatusWidget extends StatelessWidget {
-  const MenuStatusWidget({super.key, required this.status});
+  const MenuStatusWidget(
+      {super.key, required this.status, this.isSelectable = true});
 
   final MenuStatus status;
+  final bool isSelectable;
   @override
   Widget build(BuildContext context) {
     return Wrap(
@@ -26,13 +28,14 @@ class MenuStatusWidget extends StatelessWidget {
             style: KwangStyle.body3M.copyWith(color: KwangColor.grey100),
           ),
         ),
-        SvgPicture.asset(
-          "assets/icons/ic_16_dropdown.svg",
-          width: 16,
-          height: 16,
-          colorFilter:
-              const ColorFilter.mode(KwangColor.grey600, BlendMode.srcIn),
-        ),
+        if (isSelectable)
+          SvgPicture.asset(
+            "assets/icons/ic_16_dropdown.svg",
+            width: 16,
+            height: 16,
+            colorFilter:
+                const ColorFilter.mode(KwangColor.grey600, BlendMode.srcIn),
+          ),
       ],
     );
   }
