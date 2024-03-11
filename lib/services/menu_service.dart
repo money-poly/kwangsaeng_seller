@@ -1,6 +1,6 @@
 import 'dart:convert';
-
 import 'package:kwangsaeng_seller/models/menu.dart';
+import 'package:kwangsaeng_seller/models/origin.dart';
 import 'package:kwangsaeng_seller/services/api.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -12,9 +12,53 @@ class MenuService {
     final res = await _api.req(
         "/menus/seller/${prefs.getString("storeId")}", HttpMethod.get,
         type: UrlType.dev, needToken: true);
-    print(res.body);
     if (res.statusCode == 200) {
-      return (jsonDecode(res.body)["data"] as List).map((e) => Menu.fromJson(e)).toList();
+      return (jsonDecode(res.body)["data"] as List)
+          .map((e) => Menu.fromJson(e))
+          .toList();
+    } else {
+      throw Exception("http Exception");
+    }
+  }
+
+  Future<bool> registerMenu(String name, String? description, int regularPrice,
+      int discountPrice, double discountRate, List<Origin> origins) async {
+    final prefs = await SharedPreferences.getInstance();
+    // print(
+    //   jsonEncode({
+    //     "storeId": int.parse(prefs.getString("storeId")!),
+    //     // "menuPictureUrl": img,
+    //     // category,
+    //     "name": name,
+    //     "status": "hidden",
+    //     "price": regularPrice,
+    //     "salePrice": discountPrice,
+    //     "discountRate": discountRate,
+    //     /* Optional */
+    //     "description": description,
+    //     "countryOfOrigin": origins.map((e) => e.toJson()).toList(),
+    //   }),
+    // );
+
+    final res = await _api.req("/menus", HttpMethod.post,
+        body: jsonEncode({
+          "storeId": int.parse(prefs.getString("storeId")!),
+          // "menuPictureUrl": img,
+          // category, // TODO: 메뉴 카테고리 추가
+          "name": name,
+          "status": "hidden",
+          "price": regularPrice,
+          "salePrice": discountPrice,
+          "discountRate": discountRate,
+          /* Optional */
+          "description": description,
+          "countryOfOrigin": origins.map((e) => e.toJson()).toList(),
+        }),
+        type: UrlType.dev,
+        needToken: true);
+
+    if (res.statusCode == 201 || res.statusCode == 200) {
+      return true;
     } else {
       throw Exception("http Exception");
     }
