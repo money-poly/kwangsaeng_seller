@@ -4,6 +4,7 @@ import 'package:kwangsaeng_seller/screens/menu/menu_main_view_model.dart';
 import 'package:kwangsaeng_seller/screens/menu/menu_order_view.dart';
 import 'package:kwangsaeng_seller/screens/menu/menu_order_view_model.dart';
 import 'package:kwangsaeng_seller/screens/menu/menu_register_view.dart';
+import 'package:kwangsaeng_seller/screens/menu/menu_register_view_model.dart';
 import 'package:kwangsaeng_seller/screens/menu/widgets/menu_tile.dart';
 import 'package:kwangsaeng_seller/styles/color.dart';
 import 'package:kwangsaeng_seller/styles/txt.dart';
@@ -77,7 +78,7 @@ class MenuMainView extends StatelessWidget {
             )
           ],
           titleSpacing: 20,
-          toolbarHeight: 48,
+          toolbarHeight: 62,
           centerTitle: false,
           backgroundColor: KwangColor.grey200,
           elevation: 0,
@@ -89,14 +90,14 @@ class MenuMainView extends StatelessWidget {
                   padding: const EdgeInsets.fromLTRB(20, 8, 20, 64),
                   child: Column(
                     children: List.generate(
-                      10,
+                      viewModel.menus.length,
                       (index) => Column(
                         children: [
-                          const MenuTile(
+                          MenuTile(
                             type: MenuTileType.main,
-                            menu: null,
+                            menu: viewModel.menus[index],
                           ),
-                          if (index != 9)
+                          if (index != viewModel.menus.length - 1)
                             const SizedBox(
                               height: 20,
                             )
@@ -107,12 +108,15 @@ class MenuMainView extends StatelessWidget {
                 ),
               ),
         floatingActionButton: GestureDetector(
-          onTap: () {
-            Navigator.of(context).push(
+          onTap: () async {
+            await Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (context) => const MenuRegisterView(),
+                builder: (_) => ChangeNotifierProvider(
+                    create: (_) => MenuRegisterViewModel(),
+                    child: const MenuRegisterView()),
               ),
             );
+            viewModel.init();
           },
           child: Container(
             width: 143,
