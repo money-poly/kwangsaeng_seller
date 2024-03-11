@@ -44,6 +44,7 @@ class MenuOrderView extends StatelessWidget {
               key: Key("$idx"),
               type: MenuTileType.changeOrder,
               menu: viewModel.modifiedMenus![idx],
+              idx: idx,
             )
         ],
         onReorder: (oldIdx, newIdx) {

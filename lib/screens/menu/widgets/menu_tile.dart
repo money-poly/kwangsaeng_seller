@@ -3,17 +3,27 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:kwangsaeng_seller/models/menu.dart';
+import 'package:kwangsaeng_seller/screens/menu/menu_main_view_model.dart';
+import 'package:kwangsaeng_seller/screens/menu/widgets/menu_bottom_sheet.dart';
 import 'package:kwangsaeng_seller/screens/menu/widgets/menu_status_widget.dart';
 import 'package:kwangsaeng_seller/styles/color.dart';
 import 'package:kwangsaeng_seller/styles/txt.dart';
+import 'package:provider/provider.dart';
 
 enum MenuTileType { main, changeOrder }
 
 class MenuTile extends StatelessWidget {
-  const MenuTile({super.key, required this.type, required this.menu});
+  const MenuTile(
+      {super.key,
+      required this.type,
+      required this.menu,
+      required this.idx,
+      this.viewModel});
 
   final MenuTileType type;
   final Menu? menu;
+  final int idx;
+  final MenuMainViewModel? viewModel;
   @override
   Widget build(BuildContext context) {
     switch (type) {
@@ -30,10 +40,28 @@ class MenuTile extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   GestureDetector(
-                      onTap: () {},
-                      child: const MenuStatusWidget(status: MenuStatus.sale)),
+                      onTap: () {
+                        showModalBottomSheet(
+                          context: context,
+                          builder: (context) => ChangeNotifierProvider.value(
+                            value: viewModel,
+                            child: MenuBottomSheet(
+                                type: MenuBottomSheetType.status, menuIdx: idx),
+                          ),
+                        );
+                      },
+                      child: MenuStatusWidget(status: menu!.status!)),
                   GestureDetector(
-                    onTap: () {},
+                    onTap: () {
+                      showModalBottomSheet(
+                        context: context,
+                        builder: (context) => ChangeNotifierProvider.value(
+                          value: viewModel,
+                          child: MenuBottomSheet(
+                              type: MenuBottomSheetType.more, menuIdx: idx),
+                        ),
+                      );
+                    },
                     child: SvgPicture.asset("assets/icons/ic_24_more.svg",
                         width: 24, height: 24),
                   ),
@@ -43,29 +71,50 @@ class MenuTile extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(vertical: 12),
                 child: Row(
                   children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(4),
-                      child: ExtendedImage.network(
-                        "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyMzEwMDNfMjcy%2FMDAxNjk2MzEyOTM0MDM5.5whMBDcDO5ucM_hmOuD_OHTXT4B_IsA7G0q_xSRrPJsg.IduJR4uLR4D9vtNcsVphThjjpvJUvCuHVouRLaOMKrgg.JPEG.msinvestment%2F%25C5%25A9%25B1%25E2%25BA%25AF%25C8%25AF23022219212.jpg&type=sc960_832",
-                        width: 62,
-                        height: 62,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
+                    menu!.imgUrl == null
+                        ? Container(
+                            height: 62,
+                            width: 62,
+                            alignment: Alignment.center,
+                            decoration: BoxDecoration(
+                              color: KwangColor.grey200,
+                              border: Border.all(
+                                  color: KwangColor.grey400, width: 1),
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            child: Text(
+                              "사진을\n올려보세요!",
+                              style: KwangStyle.body3M
+                                  .copyWith(color: KwangColor.grey700),
+                              textAlign: TextAlign.center,
+                            ),
+                          )
+                        : ClipRRect(
+                            borderRadius: BorderRadius.circular(4),
+                            child: ExtendedImage.network(
+                              menu!.imgUrl!,
+                              width: 62,
+                              height: 62,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
                     const SizedBox(width: 16),
                     Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          "샐러드",
-                          style: KwangStyle.body2
-                              .copyWith(color: KwangColor.grey600),
-                        ),
-                        const SizedBox(height: 2),
-                        Text("오렌치 치킨 샐러드(M)", style: KwangStyle.body1M),
+                        // [TODO] 카테고리가 제외되면서 임시 삭제. 추후 메뉴 카테고리 결정되면 주석 해제
+                        // Text(
+                        //   "샐러드",
+                        //   style: KwangStyle.body2
+                        //       .copyWith(color: KwangColor.grey600),
+                        // ),
+                        // const SizedBox(height: 2),
+                        Text(menu!.name, style: KwangStyle.body1M),
                         const SizedBox(height: 4),
-                        Text("정가: 9,900원", style: KwangStyle.body1M),
+                        Text(
+                            "정가: ${NumberFormat('###,###,###,###').format(menu!.regularPrice).replaceAll(' ', ',')}원",
+                            style: KwangStyle.body1M),
                       ],
                     ),
                   ],
@@ -82,7 +131,7 @@ class MenuTile extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 4),
                     child: Text(
-                      "7,900 원",
+                      "${NumberFormat('###,###,###,###').format(menu!.discountPrice).replaceAll(' ', ',')} 원",
                       style: KwangStyle.btn1SB,
                     ),
                   )
@@ -116,15 +165,16 @@ class MenuTile extends StatelessWidget {
                   ),
                   const SizedBox(width: 16),
                   Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        "샐러드",
-                        style: KwangStyle.body2
-                            .copyWith(color: KwangColor.grey600),
-                      ),
-                      const SizedBox(height: 2),
+                      // [TODO] 카테고리가 제외되면서 임시 삭제. 추후 메뉴 카테고리 결정되면 주석 해제
+                      // Text(
+                      //   "샐러드",
+                      //   style: KwangStyle.body2
+                      //       .copyWith(color: KwangColor.grey600),
+                      // ),
+                      // const SizedBox(height: 2),
                       Text(menu!.name, style: KwangStyle.body1M),
                       const SizedBox(height: 4),
                       Row(

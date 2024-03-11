@@ -83,30 +83,37 @@ class MenuMainView extends StatelessWidget {
           backgroundColor: KwangColor.grey200,
           elevation: 0,
         ),
-        body: viewModel.menus.isEmpty
-            ? const EmptyCard(emptyType: EmptyCardType.menu)
-            : SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 8, 20, 64),
-                  child: Column(
-                    children: List.generate(
-                      viewModel.menus.length,
-                      (index) => Column(
-                        children: [
-                          MenuTile(
-                            type: MenuTileType.main,
-                            menu: viewModel.menus[index],
+        body: Stack(
+          children: [
+            viewModel.menus.isEmpty
+                ? const EmptyCard(emptyType: EmptyCardType.menu)
+                : SingleChildScrollView(
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(20, 8, 20, 64),
+                      child: Column(
+                        children: List.generate(
+                          viewModel.menus.length,
+                          (index) => Column(
+                            children: [
+                              MenuTile(
+                                type: MenuTileType.main,
+                                menu: viewModel.menus[index],
+                                idx: index,
+                                viewModel: viewModel,
+                              ),
+                              if (index != viewModel.menus.length - 1)
+                                const SizedBox(
+                                  height: 20,
+                                )
+                            ],
                           ),
-                          if (index != viewModel.menus.length - 1)
-                            const SizedBox(
-                              height: 20,
-                            )
-                        ],
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ),
+            if (viewModel.isWorking) const LoadingPage(),
+          ],
+        ),
         floatingActionButton: GestureDetector(
           onTap: () async {
             await Navigator.of(context).push(
