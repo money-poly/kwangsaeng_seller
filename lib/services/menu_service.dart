@@ -63,4 +63,19 @@ class MenuService {
       throw Exception("http Exception");
     }
   }
+  Future<bool> changeMenuStatus(
+      int menuId, MenuStatus prevStatus, MenuStatus updateStatus) async {
+    final res = await _api.req("/menus/status/$menuId", HttpMethod.put,
+        body: jsonEncode({
+          "prevStatus": prevStatus.name,
+          "updateStatus": updateStatus.name,
+        }),
+        type: UrlType.dev,
+        needToken: true);
+    if (res.statusCode == 200) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 }
