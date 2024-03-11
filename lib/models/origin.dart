@@ -11,4 +11,9 @@ class Origin {
         ingredient: json['ingredient'],
         country: json['origin'],
       );
+
+  Map<String, dynamic> toJson() => {
+    'ingredient': ingredient,
+    'origin': country,
+  };
 }
