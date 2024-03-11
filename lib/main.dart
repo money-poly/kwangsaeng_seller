@@ -7,6 +7,7 @@ import 'package:kwangsaeng_seller/firebase_options.dart';
 import 'package:kwangsaeng_seller/screens/home/home_view_model.dart';
 import 'package:kwangsaeng_seller/screens/menu/menu_main_view_model.dart';
 import 'package:kwangsaeng_seller/screens/menu/menu_register_view.dart';
+import 'package:kwangsaeng_seller/screens/menu/menu_register_view_model.dart';
 import 'package:kwangsaeng_seller/screens/navigation/nav_view.dart';
 import 'package:kwangsaeng_seller/screens/navigation/nav_view_model.dart';
 import 'package:kwangsaeng_seller/screens/start/start_view.dart';
@@ -27,10 +28,14 @@ void main() async {
   final service = AuthService();
   final PageType pageType;
   if (await checkValidToken()) {
-    if (await service.getStoreRegisterStatus() == StoreRegisterStatus.done) {
-      pageType = PageType.home;
-    } else {
-      pageType = PageType.wait;
+    final status = await service.getStoreRegisterStatus();
+    switch (status) {
+      case StoreRegisterStatus.done:
+        pageType = PageType.home;
+      case StoreRegisterStatus.waiting:
+        pageType = PageType.wait;
+      default:
+        pageType = PageType.start;
     }
   } else {
     pageType = PageType.start;
@@ -49,7 +54,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return StyledToast(
       locale: const Locale('ko', 'KR'),
-      textStyle: KwangStyle.btn3.copyWith(color: KwangColor.grey100),
+      textStyle: KwangStyle.body2.copyWith(color: KwangColor.grey100),
       backgroundColor: KwangColor.grey800.withOpacity(0.8),
       toastPositions: StyledToastPosition.bottom,
       borderRadius: BorderRadius.circular(20),
@@ -59,16 +64,20 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: '광생 사장님',
         theme: KwangTheme.kwangTheme,
-        home: switch (pageType) {
-          PageType.start => ChangeNotifierProvider(
-              create: (_) => StartViewModel(), child: const StartView()),
-          PageType.wait => const WaitingView(),
-          PageType.home => MultiProvider(providers: [
-              ChangeNotifierProvider(create: (_) => NavViewModel()),
-              ChangeNotifierProvider(create: (_) => HomeViewModel()),
-              ChangeNotifierProvider(create: (_) => MenuMainViewModel()),
-            ], child: const NavView()),
-        },
+        home: ChangeNotifierProvider(
+          create: (_) => MenuRegisterViewModel(),
+          child: //MenuRegisterView())
+              switch (pageType) {
+            PageType.start => ChangeNotifierProvider(
+                create: (_) => StartViewModel(), child: const StartView()),
+            PageType.wait => const WaitingView(),
+            PageType.home => MultiProvider(providers: [
+                ChangeNotifierProvider(create: (_) => NavViewModel()),
+                ChangeNotifierProvider(create: (_) => HomeViewModel()),
+                ChangeNotifierProvider(create: (_) => MenuMainViewModel()),
+              ], child: const NavView()),
+          },
+        ),
       ),
     );
   }
