@@ -1,4 +1,4 @@
-package com.example.kwangsaeng_seller
+package net.immersion.kwangseller
 
 import io.flutter.embedding.android.FlutterActivity
 
