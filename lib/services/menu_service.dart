@@ -46,7 +46,7 @@ class MenuService {
           // "menuPictureUrl": img,
           // category, // TODO: 메뉴 카테고리 추가
           "name": name,
-          "status": "hidden",
+          "status": "sale",
           "price": regularPrice,
           "salePrice": discountPrice,
           "discountRate": discountRate,
