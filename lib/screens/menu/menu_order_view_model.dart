@@ -1,48 +1,26 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:kwangsaeng_seller/models/menu.dart';
+import 'package:kwangsaeng_seller/services/menu_service.dart';
 
 class MenuOrderViewModel with ChangeNotifier {
-  MenuOrderViewModel() {
-    getMenus();
+  MenuOrderViewModel(menus) {
+    initMenus(menus);
   }
 
+  final MenuService _service = MenuService();
+  bool _isWorking = false;
   List<Menu>? _menus;
   List<Menu>? _modifiedMenus;
   bool _isChangedOrder = false;
 
+  bool get isWorking => _isWorking;
   List<Menu>? get menus => _menus;
   List<Menu>? get modifiedMenus => _modifiedMenus;
   bool get isChangedOrder => _isChangedOrder;
 
-  void getMenus() {
-    List<Menu> tempMenus = [
-      Menu(
-          id: 1,
-          name: "돈까스",
-          discountRate: 10,
-          discountPrice: 9000,
-          regularPrice: 10000,
-          imgUrl: null,
-          status: MenuStatus.sale),
-      Menu(
-          id: 2,
-          name: "오렌지 치킨 샐러드",
-          discountRate: 10,
-          discountPrice: 9000,
-          regularPrice: 10000,
-          imgUrl: null,
-          status: MenuStatus.sale),
-      Menu(
-          id: 4,
-          name: "돈까스세트메밀국수우동",
-          discountRate: 40,
-          discountPrice: 10200,
-          regularPrice: 17000,
-          imgUrl: null,
-          status: MenuStatus.soldout),
-    ];
-    _menus = [...tempMenus];
+  void initMenus(List<Menu> initMenus) {
+    _menus = [...initMenus];
     _modifiedMenus = [...?menus];
     notifyListeners();
   }
@@ -58,6 +36,11 @@ class MenuOrderViewModel with ChangeNotifier {
     } else {
       _isChangedOrder = false;
     }
+    notifyListeners();
+  }
+
+  Future<void> saveOrder() async {
+    await _service.updateMenuOrder(menus!.map((e) => e.id).toList());
     notifyListeners();
   }
 }

@@ -4,6 +4,7 @@ import 'package:kwangsaeng_seller/screens/menu/menu_order_view_model.dart';
 import 'package:kwangsaeng_seller/screens/menu/widgets/menu_tile.dart';
 import 'package:kwangsaeng_seller/styles/color.dart';
 import 'package:kwangsaeng_seller/styles/txt.dart';
+import 'package:kwangsaeng_seller/widgets/custom_dialog.dart';
 import 'package:provider/provider.dart';
 
 class MenuOrderView extends StatelessWidget {
@@ -23,7 +24,24 @@ class MenuOrderView extends StatelessWidget {
           padding: const EdgeInsets.only(left: 8),
           child: GestureDetector(
             onTap: () {
-              Navigator.of(context).pop();
+              if (viewModel.isChangedOrder) {
+                showDialog(
+                  context: context,
+                  builder: (context) => CustomDialog(
+                    title: "편집을 종료하시겠어요?",
+                    content: "변경한 내용이 저장되지 않고 종료됩니다.",
+                    onCanceled: () {
+                      Navigator.pop(context);
+                    },
+                    onConfirmed: () {
+                      Navigator.pop(context);
+                      Navigator.pop(context);
+                    },
+                  ),
+                );
+              } else {
+                Navigator.pop(context);
+              }
             },
             child: SvgPicture.asset(
               "assets/icons/ic_36_back.svg",
@@ -58,8 +76,13 @@ class MenuOrderView extends StatelessWidget {
           color: KwangColor.grey200,
         ),
         child: GestureDetector(
-          onTap: () {
-            if (viewModel.isChangedOrder) {}
+          onTap: () async {
+            if (viewModel.isChangedOrder) {
+              await viewModel.saveOrder();
+              if (context.mounted) {
+                Navigator.of(context).pop();
+              }
+            }
           },
           child: Container(
             height: 52,
