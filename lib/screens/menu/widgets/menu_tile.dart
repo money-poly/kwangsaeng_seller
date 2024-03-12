@@ -154,15 +154,33 @@ class MenuTile extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(4),
-                    child: ExtendedImage.network(
-                      "https://search.pstatic.net/common/?src=http%3A%2F%2Fblogfiles.naver.net%2FMjAyMzEwMDNfMjcy%2FMDAxNjk2MzEyOTM0MDM5.5whMBDcDO5ucM_hmOuD_OHTXT4B_IsA7G0q_xSRrPJsg.IduJR4uLR4D9vtNcsVphThjjpvJUvCuHVouRLaOMKrgg.JPEG.msinvestment%2F%25C5%25A9%25B1%25E2%25BA%25AF%25C8%25AF23022219212.jpg&type=sc960_832",
-                      width: 62,
-                      height: 62,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
+                  menu!.imgUrl == null
+                      ? Container(
+                          height: 62,
+                          width: 62,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            color: KwangColor.grey200,
+                            border:
+                                Border.all(color: KwangColor.grey400, width: 1),
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: Text(
+                            "사진을\n올려보세요!",
+                            style: KwangStyle.body3M
+                                .copyWith(color: KwangColor.grey700),
+                            textAlign: TextAlign.center,
+                          ),
+                        )
+                      : ClipRRect(
+                          borderRadius: BorderRadius.circular(4),
+                          child: ExtendedImage.network(
+                            menu!.imgUrl!,
+                            width: 62,
+                            height: 62,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
                   const SizedBox(width: 16),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
