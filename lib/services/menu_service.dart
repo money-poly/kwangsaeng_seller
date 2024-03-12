@@ -78,4 +78,16 @@ class MenuService {
       return false;
     }
   }
+
+  Future<bool> updateMenuOrder(List<int> menuIds) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final res = await _api.req(
+        "/menus/order/${prefs.getString("storeId")}", HttpMethod.put,
+        type: UrlType.dev, needToken: true);
+    if (res.statusCode == 200) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 }
