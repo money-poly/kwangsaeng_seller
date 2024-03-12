@@ -78,7 +78,7 @@ class CustomDialog extends StatelessWidget {
                   ),
                   Expanded(
                     child: GestureDetector(
-                      onTap: onCanceled,
+                      onTap: onConfirmed,
                       child: Container(
                         height: 52,
                         alignment: Alignment.center,
