@@ -33,16 +33,16 @@ class MenuMainView extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text("메뉴 관리", style: KwangStyle.header1),
-                  const SizedBox(width: 16),
-                  GestureDetector(
-                    onTap: () {},
-                    behavior: HitTestBehavior.translucent,
-                    child: Text(
-                      "미리보기",
-                      style: KwangStyle.btn2SB
-                          .copyWith(color: KwangColor.secondary400),
-                    ),
-                  )
+                  // const SizedBox(width: 16),
+                  // GestureDetector(
+                  //   onTap: () {},
+                  //   behavior: HitTestBehavior.translucent,
+                  //   child: Text(
+                  //     "미리보기",
+                  //     style: KwangStyle.btn2SB
+                  //         .copyWith(color: KwangColor.secondary400),
+                  //   ),
+                  // )
                 ],
               ),
               actions: [
