@@ -1,32 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
+import 'package:kwangsaeng_seller/models/menu.dart';
 import 'package:kwangsaeng_seller/models/origin.dart';
 import 'package:kwangsaeng_seller/services/menu_service.dart';
 import 'package:tuple/tuple.dart';
 
+enum MenuUpdateViewType {
+  register("등록"),
+  edit("수정");
+
+  const MenuUpdateViewType(this.str);
+  final String str;
+}
+
 class MenuUpdateViewModel with ChangeNotifier {
   final MenuService _service = MenuService();
   final formKey = GlobalKey<FormState>();
-  bool _isRegisterLoading = false;
-  bool get isRegisterLoading => _isRegisterLoading;
+  bool _isLoading = false;
+  bool get isLoading => _isLoading;
+  late MenuUpdateViewType _viewMode;
+  MenuDetail? _initialMenu;
+  int? _initialMenuId;
 
   MenuUpdateViewModel({int? menuId}) {
-    if (menuId != null) {}
-    _regularPriceController.addListener(() {
-      setDiscountRate();
-      checkAreValidPrices();
-    });
-    _discountPriceController.addListener(() {
-      setDiscountRate();
-      checkAreValidPrices();
-    });
-
-    origins[0].item1.addListener(() {
-      checkAreValidOrigins();
-    });
-    origins[0].item2.addListener(() {
-      checkAreValidOrigins();
-    });
+    init(menuId: menuId);
   }
 
   /* 텍스트 컨트롤러 */
@@ -35,35 +32,86 @@ class MenuUpdateViewModel with ChangeNotifier {
   final TextEditingController _discountPriceController =
       TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
-
-  TextEditingController get nameController => _nameController;
-  TextEditingController get regularPriceController => _regularPriceController;
-  TextEditingController get discountPriceController => _discountPriceController;
-  TextEditingController get descriptionController => _descriptionController;
-
   /* 기타 입력 값 */
   String? _imgUrl;
   final List<Tuple2<TextEditingController, TextEditingController>> _origins = [
     Tuple2(TextEditingController(), TextEditingController())
   ];
   double _discountRate = 0;
-
-  String? get imgUrl => _imgUrl;
-  List<Tuple2<TextEditingController, TextEditingController>> get origins =>
-      _origins;
-  double get discountRate => _discountRate;
-
   /* validated 값 */
   bool _areValidatedPrices = false;
-
-  bool get areValidatedPrices => _areValidatedPrices;
-
   /* 유효값 검증 */
   bool _areValidPrices = false;
   final List<bool> _areValidOrigins = [true];
 
+  MenuUpdateViewType get viewMode => _viewMode;
+  TextEditingController get nameController => _nameController;
+  TextEditingController get regularPriceController => _regularPriceController;
+  TextEditingController get discountPriceController => _discountPriceController;
+  TextEditingController get descriptionController => _descriptionController;
+  String? get imgUrl => _imgUrl;
+  List<Tuple2<TextEditingController, TextEditingController>> get origins =>
+      _origins;
+  double get discountRate => _discountRate;
+  bool get areValidatedPrices => _areValidatedPrices;
   bool get areValidPrices => _areValidPrices;
   List<bool> get areValidOrigins => _areValidOrigins;
+
+  void init({int? menuId}) {
+    _initialMenuId = menuId;
+    initListener();
+    if (menuId == null) {
+      _viewMode = MenuUpdateViewType.register;
+    } else {
+      _viewMode = MenuUpdateViewType.edit;
+      initMenu(menuId);
+    }
+  }
+
+  void initListener() {
+    _regularPriceController.addListener(() {
+      setDiscountRate();
+      checkAreValidPrices();
+    });
+    _discountPriceController.addListener(() {
+      setDiscountRate();
+      checkAreValidPrices();
+    });
+    origins[0].item1.addListener(() {
+      checkAreValidOrigins();
+    });
+    origins[0].item2.addListener(() {
+      checkAreValidOrigins();
+    });
+  }
+
+  void initMenu(int menuId) async {
+    changeIsLoading(true);
+    _initialMenu = await _service.getMenuDetail(menuId);
+    _nameController.text = _initialMenu!.name;
+    _regularPriceController.text = _initialMenu!.regularPrice.toString();
+    _discountPriceController.text = _initialMenu!.discountPrice.toString();
+    _descriptionController.text = _initialMenu!.description ?? "";
+
+    if (_initialMenu!.origins.isNotEmpty) {
+      for (var origin in _initialMenu!.origins) {
+        _origins.clear();
+        _origins.add(Tuple2(TextEditingController(), TextEditingController()));
+        _origins[_origins.length - 1].item1.text = origin.ingredient;
+        _origins[_origins.length - 1].item2.text = origin.country;
+        _areValidOrigins.add(true);
+        origins[origins.length - 1].item1.addListener(() {
+          checkAreValidOrigins();
+        });
+        origins[origins.length - 1].item2.addListener(() {
+          checkAreValidOrigins();
+        });
+      }
+    }
+    // setDiscountRate();
+    changeIsLoading(false);
+    notifyListeners();
+  }
 
   void setDiscountRate() {
     var regularPrice = _regularPriceController.text.isEmpty
@@ -157,9 +205,9 @@ class MenuUpdateViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  /* 메뉴 등록 */
+  /* 메뉴 등록 및 수정 */
   Future<bool> register() async {
-    changeIsRegistering(true);
+    changeIsLoading(true);
     if (await _service.registerMenu(
         _nameController.text,
         _descriptionController.text,
@@ -171,17 +219,40 @@ class MenuUpdateViewModel with ChangeNotifier {
             .map((e) => Origin(ingredient: e.item1.text, country: e.item2.text))
             .toList())) {
       showToast("메뉴를 등록했습니다.");
-      changeIsRegistering(false);
+      changeIsLoading(false);
       return true;
     } else {
       showToast("메뉴 등록에 실패했습니다.");
-      changeIsRegistering(false);
+      changeIsLoading(false);
       return false;
     }
   }
 
-  void changeIsRegistering(bool isRegistering) {
-    _isRegisterLoading = isRegistering;
+  Future<bool> modify() async {
+    changeIsLoading(true);
+    if (await _service.modifyMenu(
+        _initialMenuId!,
+        _nameController.text,
+        _descriptionController.text,
+        int.parse(regularPriceController.text),
+        int.parse(discountPriceController.text),
+        _discountRate,
+        origins
+            .where((e) => e.item1.text.isNotEmpty && e.item2.text.isNotEmpty)
+            .map((e) => Origin(ingredient: e.item1.text, country: e.item2.text))
+            .toList())) {
+      showToast("메뉴를 수정했습니다.");
+      changeIsLoading(false);
+      return true;
+    } else {
+      showToast("메뉴 수정에 실패했습니다.");
+      changeIsLoading(false);
+      return false;
+    }
+  }
+
+  void changeIsLoading(bool isRegistering) {
+    _isLoading = isRegistering;
     notifyListeners();
   }
 }

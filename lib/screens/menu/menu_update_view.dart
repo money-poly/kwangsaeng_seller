@@ -28,7 +28,8 @@ class MenuUpdateView extends StatelessWidget {
               child: Scaffold(
                 backgroundColor: KwangColor.grey100,
                 appBar: AppBar(
-                  title: Text("메뉴 등록하기", style: KwangStyle.header2),
+                  title: Text("메뉴 ${viewModel.viewMode.str}하기",
+                      style: KwangStyle.header2),
                   leading: GestureDetector(
                     behavior: HitTestBehavior.translucent,
                     onTap: () {
@@ -131,15 +132,21 @@ class MenuUpdateView extends StatelessWidget {
                     color: KwangColor.grey100,
                   ),
                   child: CustomBtn(
-                    txt: "등록하기",
+                    txt: "${viewModel.viewMode.str}하기",
                     txtColor: KwangColor.grey100,
                     bgColor: KwangColor.secondary400,
                     onTap: () async {
                       viewModel.validateAll();
                       if (viewModel.checkAreAllValid()) {
-                        await viewModel.register().then((value) {
-                          if (value) Navigator.pop(context);
-                        });
+                        if (viewModel.viewMode == MenuUpdateViewType.register) {
+                          await viewModel.register().then((value) {
+                            if (value) Navigator.pop(context);
+                          });
+                        } else {
+                          await viewModel.modify().then((result) {
+                            if (result) Navigator.pop(context);
+                          });
+                        }
                       }
                     },
                   ),
@@ -148,7 +155,7 @@ class MenuUpdateView extends StatelessWidget {
             );
           },
         ),
-        if (viewModel.isRegisterLoading) const LoadingPage()
+        if (viewModel.isLoading) const LoadingPage()
       ],
     );
   }
