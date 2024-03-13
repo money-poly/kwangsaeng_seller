@@ -4,14 +4,17 @@ import 'package:kwangsaeng_seller/styles/color.dart';
 import 'package:kwangsaeng_seller/styles/txt.dart';
 
 class SettingBtn extends StatelessWidget {
-  const SettingBtn({super.key, required this.title, required this.onTap});
+  const SettingBtn(
+      {super.key, required this.title, required this.onTap, this.icon = true});
 
   final String title;
   final void Function() onTap;
+  final bool icon;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      behavior: HitTestBehavior.translucent,
       onTap: onTap,
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
@@ -20,13 +23,14 @@ class SettingBtn extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(title, style: KwangStyle.header3),
-            SvgPicture.asset(
-              "assets/icons/ic_18_arrow_right.svg",
-              width: 18,
-              height: 18,
-              colorFilter:
-                  const ColorFilter.mode(KwangColor.grey600, BlendMode.srcIn),
-            )
+            if (icon)
+              SvgPicture.asset(
+                "assets/icons/ic_18_arrow_right.svg",
+                width: 18,
+                height: 18,
+                colorFilter:
+                    const ColorFilter.mode(KwangColor.grey600, BlendMode.srcIn),
+              )
           ],
         ),
       ),
