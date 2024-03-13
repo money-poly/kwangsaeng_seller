@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:kwangsaeng_seller/models/menu.dart';
 import 'package:kwangsaeng_seller/models/origin.dart';
 import 'package:kwangsaeng_seller/services/api.dart';
@@ -6,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class MenuService {
   final _api = API();
+  final _tempLatLng = const LatLng(37.61977, 127.06092);
 
   Future<List<Menu>> getMenus() async {
     final prefs = await SharedPreferences.getInstance();
@@ -18,6 +20,18 @@ class MenuService {
           .toList();
     } else {
       throw Exception("http Exception");
+    }
+  }
+
+  Future<MenuDetail> getMenuDetail(int id) async {
+    final res = await _api.req(
+        "/menus/detail/$id?lat=${_tempLatLng.latitude}&lon=${_tempLatLng.longitude}",
+        HttpMethod.get,
+        type: UrlType.dev);
+    if (res.statusCode != 200) {
+      throw Exception("Failed to load detail menu");
+    } else {
+      return MenuDetail.fromJson(jsonDecode(res.body)["data"]);
     }
   }
 
@@ -63,6 +77,39 @@ class MenuService {
       throw Exception("http Exception");
     }
   }
+
+  Future<bool> modifyMenu(
+      int menuId,
+      String name,
+      String description,
+      int regularPrice,
+      int discountPrice,
+      double discountRate,
+      List<Origin> origins) async {
+    final prefs = await SharedPreferences.getInstance();
+    final res = await _api.req("/menus/$menuId", HttpMethod.put,
+        body: jsonEncode({
+          "storeId": int.parse(prefs.getString("storeId")!),
+          // "menuPictureUrl": img,
+          // category, // TODO: 메뉴 카테고리 추가
+          "name": name,
+          "status": "sale",
+          "price": regularPrice,
+          "salePrice": discountPrice,
+          "discountRate": discountRate,
+          "description": description,
+          /* Optional */
+          "countryOfOrigin": origins.map((e) => e.toJson()).toList(),
+        }),
+        type: UrlType.dev,
+        needToken: true);
+    if (res.statusCode == 201 || res.statusCode == 200) {
+      return true;
+    } else {
+      throw Exception("http Exception");
+    }
+  }
+
   Future<bool> changeMenuStatus(
       int menuId, MenuStatus prevStatus, MenuStatus updateStatus) async {
     final res = await _api.req("/menus/status/$menuId", HttpMethod.put,
@@ -78,6 +125,18 @@ class MenuService {
       return false;
     }
   }
+
+  Future<bool> deleteMenu(int menuId) async {
+    final res = await _api.req("/menus/$menuId", HttpMethod.delete,
+        type: UrlType.dev, needToken: true);
+    if (res.statusCode == 200) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  // Future<bool> editMenu(int menuId)
 
   Future<bool> updateMenuOrder(List<int> menuIds) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
