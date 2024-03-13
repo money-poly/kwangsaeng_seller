@@ -91,8 +91,9 @@ class StoreDetail {
           .map((e) => e['name'].toString())
           .toList(),
       address: json['detail']['address'] +
-          " " +
-          (json['detail']['addressDetail'] ?? ""),
+          (json['detail']['addressDetail'] == null
+              ? ""
+              : " ${json['detail']['addressDetail']}"),
       latLng: LatLng(
         double.parse(json['detail']['lat']),
         double.parse(json['detail']['lon']),
@@ -106,6 +107,41 @@ class StoreDetail {
       phone: json['detail']['phone'],
       /* Optional */
       imgUrl: json['detail']['storePictureUrl'],
+    );
+  }
+}
+
+class StoreMenu {
+  int id;
+  String name;
+  String address;
+  LatLng latLng;
+  String pickUpTime;
+  String phone;
+
+  StoreMenu({
+    required this.id,
+    required this.name,
+    required this.address,
+    required this.latLng,
+    required this.pickUpTime,
+    required this.phone,
+  });
+
+  factory StoreMenu.fromJson(Map<String, dynamic> json) {
+    return StoreMenu(
+      id: json['id'],
+      name: json['name'],
+      address: json['detail']['address'] +
+          (json['detail']['addressDetail'] == null
+              ? ""
+              : " ${json['detail']['addressDetail']}"),
+      latLng: LatLng(
+        double.parse(json['detail']['lat']),
+        double.parse(json['detail']['lon']),
+      ),
+      pickUpTime: json['detail']['pickUpTime'],
+      phone: json['detail']['phone'],
     );
   }
 }
