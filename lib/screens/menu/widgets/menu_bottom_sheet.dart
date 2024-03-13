@@ -7,6 +7,7 @@ import 'package:kwangsaeng_seller/screens/menu/menu_update_view_model.dart';
 import 'package:kwangsaeng_seller/screens/menu/widgets/menu_status_widget.dart';
 import 'package:kwangsaeng_seller/styles/color.dart';
 import 'package:kwangsaeng_seller/styles/txt.dart';
+import 'package:kwangsaeng_seller/widgets/custom_dialog.dart';
 import 'package:provider/provider.dart';
 
 enum MenuBottomSheetType { status, more }
@@ -144,7 +145,43 @@ class MenuBottomSheet extends StatelessWidget {
                 children: List.generate(
                   MenuMoreBtnType.values.length,
                   (idx) => GestureDetector(
-                    onTap: () {
+                    onTap: () async {
+                      switch (MenuMoreBtnType.values[idx]) {
+                        case MenuMoreBtnType.edit:
+                          Navigator.of(context).pop();
+                          await Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => ChangeNotifierProvider(
+                                create: (_) => MenuUpdateViewModel(
+                                    menuId: viewModel.menus[menuIdx].id),
+                                child: const MenuUpdateView(),
+                              ),
+                            ),
+                          );
+                          viewModel.init();
+                          break;
+                        case MenuMoreBtnType.delete:
+                          Navigator.of(context).pop();
+                          showDialog(
+                            context: context,
+                            builder: (context) => CustomDialog(
+                              title: "메뉴를 삭제하시겠어요?",
+                              content: "선택한 메뉴가 삭제됩니다.",
+                              onCanceled: () {
+                                Navigator.of(context).pop();
+                              },
+                              onConfirmed: () async {
+                                await viewModel
+                                    .deleteMenu(viewModel.menus[menuIdx].id);
+                                viewModel.init();
+                                if (context.mounted) {
+                                  Navigator.pop(context);
+                                }
+                              },
+                            ),
+                          );
+                          break;
+                      }
                     },
                     behavior: HitTestBehavior.translucent,
                     child: Container(
