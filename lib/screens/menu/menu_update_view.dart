@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:kwangsaeng_seller/screens/menu/menu_register_view_model.dart';
+import 'package:kwangsaeng_seller/screens/menu/menu_update_view_model.dart';
 import 'package:kwangsaeng_seller/screens/menu/widgets/menu_origin_textfields.dart';
 import 'package:kwangsaeng_seller/screens/menu/widgets/menu_price_textfields.dart';
 import 'package:kwangsaeng_seller/styles/color.dart';
@@ -13,12 +13,12 @@ import 'package:kwangsaeng_seller/widgets/loading_page.dart';
 import 'package:kwangsaeng_seller/widgets/textfield_title.dart';
 import 'package:provider/provider.dart';
 
-class MenuRegisterView extends StatelessWidget {
-  const MenuRegisterView({super.key});
+class MenuUpdateView extends StatelessWidget {
+  const MenuUpdateView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = Provider.of<MenuRegisterViewModel>(context);
+    final viewModel = Provider.of<MenuUpdateViewModel>(context);
     return Stack(
       children: [
         KeyboardVisibilityBuilder(

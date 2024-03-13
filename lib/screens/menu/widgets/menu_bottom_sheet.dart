@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:kwangsaeng_seller/models/menu.dart';
 import 'package:kwangsaeng_seller/screens/menu/menu_main_view_model.dart';
+import 'package:kwangsaeng_seller/screens/menu/menu_update_view.dart';
+import 'package:kwangsaeng_seller/screens/menu/menu_update_view_model.dart';
 import 'package:kwangsaeng_seller/screens/menu/widgets/menu_status_widget.dart';
 import 'package:kwangsaeng_seller/styles/color.dart';
 import 'package:kwangsaeng_seller/styles/txt.dart';

@@ -4,13 +4,14 @@ import 'package:kwangsaeng_seller/models/origin.dart';
 import 'package:kwangsaeng_seller/services/menu_service.dart';
 import 'package:tuple/tuple.dart';
 
-class MenuRegisterViewModel with ChangeNotifier {
+class MenuUpdateViewModel with ChangeNotifier {
   final MenuService _service = MenuService();
   final formKey = GlobalKey<FormState>();
   bool _isRegisterLoading = false;
   bool get isRegisterLoading => _isRegisterLoading;
 
-  MenuRegisterViewModel() {
+  MenuUpdateViewModel({int? menuId}) {
+    if (menuId != null) {}
     _regularPriceController.addListener(() {
       setDiscountRate();
       checkAreValidPrices();

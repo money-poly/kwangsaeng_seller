@@ -3,8 +3,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:kwangsaeng_seller/screens/menu/menu_main_view_model.dart';
 import 'package:kwangsaeng_seller/screens/menu/menu_order_view.dart';
 import 'package:kwangsaeng_seller/screens/menu/menu_order_view_model.dart';
-import 'package:kwangsaeng_seller/screens/menu/menu_register_view.dart';
-import 'package:kwangsaeng_seller/screens/menu/menu_register_view_model.dart';
+import 'package:kwangsaeng_seller/screens/menu/menu_update_view.dart';
+import 'package:kwangsaeng_seller/screens/menu/menu_update_view_model.dart';
 import 'package:kwangsaeng_seller/screens/menu/widgets/menu_tile.dart';
 import 'package:kwangsaeng_seller/styles/color.dart';
 import 'package:kwangsaeng_seller/styles/txt.dart';
@@ -118,8 +118,8 @@ class MenuMainView extends StatelessWidget {
                 await Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (_) => ChangeNotifierProvider(
-                        create: (_) => MenuRegisterViewModel(),
-                        child: const MenuRegisterView()),
+                        create: (_) => MenuUpdateViewModel(),
+                        child: const MenuUpdateView()),
                   ),
                 );
                 viewModel.init();

@@ -132,11 +132,10 @@ class StorePreviewView extends StatelessWidget {
                               title: "픽업시간",
                               content: "사용자의 위치와 조리시간을 고려해 산출됩니다.",
                               hasPaddingBottom: true),
-                          if (viewModel.store!.phone != null)
-                            StoreInfoRow(
-                                title: "전화번호",
-                                content: viewModel.store!.phone!,
-                                hasPaddingBottom: false),
+                          StoreInfoRow(
+                              title: "전화번호",
+                              content: viewModel.store!.phone,
+                              hasPaddingBottom: false),
                         ],
                       ),
                     ),

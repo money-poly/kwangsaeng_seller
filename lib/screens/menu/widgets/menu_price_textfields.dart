@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:kwangsaeng_seller/screens/menu/menu_register_view_model.dart';
+import 'package:kwangsaeng_seller/screens/menu/menu_update_view_model.dart';
 import 'package:kwangsaeng_seller/styles/color.dart';
 import 'package:kwangsaeng_seller/styles/txt.dart';
 import 'package:kwangsaeng_seller/widgets/custom_textfield.dart';
@@ -9,7 +9,7 @@ import 'package:kwangsaeng_seller/widgets/textfield_title.dart';
 class MenuPriceTextFields extends StatelessWidget {
   const MenuPriceTextFields({super.key, required this.viewModel});
 
-  final MenuRegisterViewModel viewModel;
+  final MenuUpdateViewModel viewModel;
   @override
   Widget build(BuildContext context) {
     return Column(

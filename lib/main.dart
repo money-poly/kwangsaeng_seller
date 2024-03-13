@@ -6,8 +6,6 @@ import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:kwangsaeng_seller/firebase_options.dart';
 import 'package:kwangsaeng_seller/screens/home/home_view_model.dart';
 import 'package:kwangsaeng_seller/screens/menu/menu_main_view_model.dart';
-import 'package:kwangsaeng_seller/screens/menu/menu_register_view.dart';
-import 'package:kwangsaeng_seller/screens/menu/menu_register_view_model.dart';
 import 'package:kwangsaeng_seller/screens/navigation/nav_view.dart';
 import 'package:kwangsaeng_seller/screens/navigation/nav_view_model.dart';
 import 'package:kwangsaeng_seller/screens/start/start_view.dart';
@@ -64,20 +62,16 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: '광생 사장님',
         theme: KwangTheme.kwangTheme,
-        home: ChangeNotifierProvider(
-          create: (_) => MenuRegisterViewModel(),
-          child: //MenuRegisterView())
-              switch (pageType) {
+        home: switch (pageType) {
             PageType.start => ChangeNotifierProvider(
-                create: (_) => StartViewModel(), child: const StartView()),
+          create: (_) => StartViewModel(), child: const StartView()),
             PageType.wait => const WaitingView(),
             PageType.home => MultiProvider(providers: [
-                ChangeNotifierProvider(create: (_) => NavViewModel()),
-                ChangeNotifierProvider(create: (_) => HomeViewModel()),
-                ChangeNotifierProvider(create: (_) => MenuMainViewModel()),
-              ], child: const NavView()),
+          ChangeNotifierProvider(create: (_) => NavViewModel()),
+          ChangeNotifierProvider(create: (_) => HomeViewModel()),
+          ChangeNotifierProvider(create: (_) => MenuMainViewModel()),
+        ], child: const NavView()),
           },
-        ),
       ),
     );
   }
