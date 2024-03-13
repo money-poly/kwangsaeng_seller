@@ -25,6 +25,7 @@ class MenuMainViewModel with ChangeNotifier {
   }
 
   Future<void> changeMenuStatus(int idx, MenuStatus updateStatus) async {
+    _isWorking = true;
     if (await _service.changeMenuStatus(
         _menus[idx].id, _menus[idx].status!, updateStatus)) {
       _menus[idx].status = updateStatus;
@@ -32,6 +33,18 @@ class MenuMainViewModel with ChangeNotifier {
     } else {
       showToast("메뉴 상태 변경에 실패했습니다.");
     }
+    _isWorking = false;
+    notifyListeners();
+  }
+
+  Future<void> deleteMenu(int id) async {
+    _isWorking = true;
+    if (await _service.deleteMenu(id)) {
+      showToast("메뉴가 삭제 되었습니다.");
+    } else {
+      showToast("메뉴 삭제에 실패했습니다.");
+    }
+    _isWorking = false;
     notifyListeners();
   }
 }
