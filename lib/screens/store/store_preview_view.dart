@@ -20,7 +20,10 @@ class StorePreviewView extends StatelessWidget {
   Widget build(BuildContext context) {
     final viewModel = Provider.of<StorePreviewViewModel>(context);
     return viewModel.isLoading
-        ? const LoadingPage(color: KwangColor.secondary400)
+        ? const LoadingPage(
+            color: KwangColor.secondary400,
+            backgroundColor: KwangColor.grey100,
+          )
         : Scaffold(
             backgroundColor: KwangColor.grey100,
             appBar: AppBar(
