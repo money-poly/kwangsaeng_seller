@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:kwangsaeng_seller/models/store.dart';
-import 'package:kwangsaeng_seller/services/register_service.dart';
+import 'package:kwangsaeng_seller/services/store_service.dart';
 import 'package:kwangsaeng_seller/utils.dart/phone_formatter.dart';
 import 'package:kwangsaeng_seller/utils.dart/time_formatter.dart';
 
 enum TimeType { open, close }
 
 class RegisterViewModel with ChangeNotifier {
-  final RegisterService _service = RegisterService();
+  final StoreService _service = StoreService();
   final formKey = GlobalKey<FormState>();
 
   /* 텍스트 컨트롤러 */
