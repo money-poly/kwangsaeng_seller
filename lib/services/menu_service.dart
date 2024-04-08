@@ -37,8 +37,15 @@ class MenuService {
     }
   }
 
-  Future<bool> registerMenu(String name, String description, int regularPrice,
-      int discountPrice, double discountRate, List<Origin> origins) async {
+  Future<bool> registerMenu(
+      String name,
+      String description,
+      int regularPrice,
+      int discountPrice,
+      double discountRate,
+      List<Origin> origins,
+      String expiredDate,
+      String? imgUrl) async {
     final prefs = await SharedPreferences.getInstance();
     // print(
     //   jsonEncode({
@@ -59,7 +66,7 @@ class MenuService {
     final res = await _api.req("/menus", HttpMethod.post,
         body: jsonEncode({
           "storeId": int.parse(prefs.getString("storeId")!),
-          // "menuPictureUrl": img,
+          "menuPictureUrl": imgUrl,
           // category, // [TODO] 메뉴 카테고리 추가
           "name": name,
           "status": "sale",
@@ -67,6 +74,7 @@ class MenuService {
           "salePrice": discountPrice,
           "discountRate": discountRate,
           "description": description,
+          "expiredDate": expiredDate,
           /* Optional */
           "countryOfOrigin": origins.map((e) => e.toJson()).toList(),
         }),
@@ -88,6 +96,7 @@ class MenuService {
       int discountPrice,
       double discountRate,
       List<Origin> origins,
+      String expiredDate,
       String? imgUrl) async {
     final prefs = await SharedPreferences.getInstance();
     final res = await _api.req("/menus/$menuId", HttpMethod.put,
@@ -101,6 +110,7 @@ class MenuService {
           "salePrice": discountPrice,
           "discountRate": discountRate,
           "description": description,
+          "expiredDate": expiredDate,
           /* Optional */
           "countryOfOrigin": origins.map((e) => e.toJson()).toList(),
         }),
@@ -114,7 +124,6 @@ class MenuService {
   }
 
   Future<String> uploadMenuImg(String path) async {
-    print("[LOG] ${path}");
     var file = FormData.fromMap({
       'file': MultipartFile.fromFileSync(path,
           contentType: MediaType("image", "jpg")),
@@ -131,7 +140,6 @@ class MenuService {
           },
         ));
     if (res.statusCode == 201) {
-      print("${res.data["data"]}");
       return res.data["data"];
     } else {
       throw Exception("http Exception");
@@ -163,8 +171,6 @@ class MenuService {
       return false;
     }
   }
-
-  // Future<bool> editMenu(int menuId)
 
   Future<bool> updateMenuOrder(List<int> menuIds) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();

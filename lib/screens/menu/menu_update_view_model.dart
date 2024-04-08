@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:kwangsaeng_seller/models/menu.dart';
 import 'package:kwangsaeng_seller/models/origin.dart';
 import 'package:kwangsaeng_seller/services/menu_service.dart';
@@ -31,6 +32,7 @@ class MenuUpdateViewModel with ChangeNotifier {
 
   /* 텍스트 컨트롤러 */
   final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _expireController = TextEditingController();
   final TextEditingController _regularPriceController = TextEditingController();
   final TextEditingController _discountPriceController =
       TextEditingController();
@@ -50,6 +52,7 @@ class MenuUpdateViewModel with ChangeNotifier {
 
   MenuUpdateViewType get viewMode => _viewMode;
   TextEditingController get nameController => _nameController;
+  TextEditingController get expireController => _expireController;
   TextEditingController get regularPriceController => _regularPriceController;
   TextEditingController get discountPriceController => _discountPriceController;
   TextEditingController get descriptionController => _descriptionController;
@@ -95,6 +98,8 @@ class MenuUpdateViewModel with ChangeNotifier {
     _initialMenu = await _service.getMenuDetail(menuId);
     initImg();
     _nameController.text = _initialMenu!.name;
+    _expireController.text =
+        DateFormat("yyyyMMdd").format(_initialMenu!.expiredDate);
     _regularPriceController.text = _initialMenu!.regularPrice.toString();
     _discountPriceController.text = _initialMenu!.discountPrice.toString();
     _descriptionController.text = _initialMenu!.description ?? "";
@@ -190,15 +195,13 @@ class MenuUpdateViewModel with ChangeNotifier {
 
   /* 유효성 검사 */
   bool checkAreAllValid() {
-    if (isValidName() && _areValidPrices && !_areValidOrigins.contains(false)) {
+    if (formKey.currentState!.validate() &&
+        _areValidPrices &&
+        !_areValidOrigins.contains(false)) {
       return true;
     } else {
       return false;
     }
-  }
-
-  bool isValidName() {
-    return _nameController.text.isNotEmpty;
   }
 
   void validateAll() {
@@ -262,7 +265,9 @@ class MenuUpdateViewModel with ChangeNotifier {
         origins
             .where((e) => e.item1.text.isNotEmpty && e.item2.text.isNotEmpty)
             .map((e) => Origin(ingredient: e.item1.text, country: e.item2.text))
-            .toList())) {
+            .toList(),
+        expireController.text,
+        imgUrl)) {
       showToast("메뉴를 등록했습니다.");
       changeIsLoading(false);
       return true;
@@ -295,6 +300,7 @@ class MenuUpdateViewModel with ChangeNotifier {
             .where((e) => e.item1.text.isNotEmpty && e.item2.text.isNotEmpty)
             .map((e) => Origin(ingredient: e.item1.text, country: e.item2.text))
             .toList(),
+        expireController.text,
         imgUrl)) {
       showToast("메뉴를 수정했습니다.");
       changeIsLoading(false);

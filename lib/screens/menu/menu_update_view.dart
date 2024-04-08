@@ -6,6 +6,7 @@ import 'package:kwangsaeng_seller/screens/menu/widgets/menu_origin_textfields.da
 import 'package:kwangsaeng_seller/screens/menu/widgets/menu_price_textfields.dart';
 import 'package:kwangsaeng_seller/styles/color.dart';
 import 'package:kwangsaeng_seller/styles/txt.dart';
+import 'package:kwangsaeng_seller/utils.dart/date_validator.dart';
 import 'package:kwangsaeng_seller/widgets/custom_btn.dart';
 import 'package:kwangsaeng_seller/widgets/custom_textfield.dart';
 import 'package:kwangsaeng_seller/widgets/img_upload_card.dart';
@@ -106,6 +107,30 @@ class MenuUpdateView extends StatelessWidget {
                           },
                           maxLength: 20,
                           isVisibleMaxLength: true,
+                        ),
+                        const SizedBox(height: 20),
+                        const TextFieldTitle(title: "소비기한"),
+                        CustomTextField(
+                          controller: viewModel.expireController,
+                          hintText: "YYYYMMDD",
+                          validator: (input) {
+                            if (input.isEmpty) {
+                              return "날짜를 입력해주세요";
+                            } else {
+                              final date = dateValidator(input);
+                              if (date == null) {
+                                return "올바른 날짜를 입력해주세요";
+                              } else if (DateTime.now()
+                                  .add(const Duration(days: -1))
+                                  .isAfter(date)) {
+                                return "소비기한이 남아있는 메뉴를 등록해주세요";
+                              }
+                            }
+                            return null;
+                          },
+                          keyboardType: TextInputType.number,
+                          prompt: "*가장 임박한 날짜로 기입해주세요.",
+                          maxLength: 8,
                         ),
                         const SizedBox(height: 20),
                         MenuPriceTextFields(viewModel: viewModel),
