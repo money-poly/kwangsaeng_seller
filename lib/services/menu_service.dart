@@ -1,9 +1,11 @@
 import 'dart:convert';
+import 'package:dio/dio.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:kwangsaeng_seller/models/menu.dart';
 import 'package:kwangsaeng_seller/models/origin.dart';
 import 'package:kwangsaeng_seller/services/api.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http_parser/http_parser.dart';
 
 class MenuService {
   final _api = API();
@@ -19,7 +21,7 @@ class MenuService {
           .map((e) => Menu.fromJson(e))
           .toList();
     } else {
-      throw Exception("http Exception");
+      throw Exception("[${res.statusCode}]${jsonDecode(res.body)["message"]}");
     }
   }
 
@@ -58,7 +60,7 @@ class MenuService {
         body: jsonEncode({
           "storeId": int.parse(prefs.getString("storeId")!),
           // "menuPictureUrl": img,
-          // category, // TODO: 메뉴 카테고리 추가
+          // category, // [TODO] 메뉴 카테고리 추가
           "name": name,
           "status": "sale",
           "price": regularPrice,
@@ -85,13 +87,14 @@ class MenuService {
       int regularPrice,
       int discountPrice,
       double discountRate,
-      List<Origin> origins) async {
+      List<Origin> origins,
+      String? imgUrl) async {
     final prefs = await SharedPreferences.getInstance();
     final res = await _api.req("/menus/$menuId", HttpMethod.put,
         body: jsonEncode({
           "storeId": int.parse(prefs.getString("storeId")!),
-          // "menuPictureUrl": img,
-          // category, // TODO: 메뉴 카테고리 추가
+          "menuPictureUrl": imgUrl,
+          // category, // [TODO] 메뉴 카테고리 추가
           "name": name,
           "status": "sale",
           "price": regularPrice,
@@ -105,6 +108,31 @@ class MenuService {
         needToken: true);
     if (res.statusCode == 201 || res.statusCode == 200) {
       return true;
+    } else {
+      throw Exception("http Exception");
+    }
+  }
+
+  Future<String> uploadMenuImg(String path) async {
+    print("[LOG] ${path}");
+    var file = FormData.fromMap({
+      'file': MultipartFile.fromFileSync(path,
+          contentType: MediaType("image", "jpg")),
+    });
+    final dio = Dio();
+    final prefs = await SharedPreferences.getInstance();
+    final res = await dio.post(
+        "${_api.devUrl}/menus/upload/${prefs.getString("storeId")}",
+        data: file,
+        options: Options(
+          contentType: "multipart/form-data",
+          headers: {
+            "Authorization": "Bearer ${await _api.getAccessToken()}",
+          },
+        ));
+    if (res.statusCode == 201) {
+      print("${res.data["data"]}");
+      return res.data["data"];
     } else {
       throw Exception("http Exception");
     }

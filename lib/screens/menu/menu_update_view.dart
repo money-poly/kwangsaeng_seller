@@ -62,25 +62,33 @@ class MenuUpdateView extends StatelessWidget {
                           child: Stack(
                             children: [
                               GestureDetector(
-                                  onTap: () {},
-                                  child:
-                                      ImgUploadCard(imgUrl: viewModel.imgUrl)),
+                                  onTap: () async {
+                                    await viewModel.uploadImg();
+                                  },
+                                  child: ImgUploadCard(
+                                      imgUrl: viewModel.imgUrl,
+                                      imgType: viewModel.imgType)),
                               if (viewModel.imgUrl != null)
                                 Positioned(
                                   top: 0,
                                   right: 0,
-                                  child: Container(
-                                    width: 24,
-                                    height: 24,
-                                    padding: const EdgeInsets.all(3),
-                                    decoration: BoxDecoration(
-                                      color: KwangColor.grey100,
-                                      shape: BoxShape.circle,
-                                      border:
-                                          Border.all(color: KwangColor.grey500),
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      viewModel.updateImgUrl(null);
+                                    },
+                                    child: Container(
+                                      width: 24,
+                                      height: 24,
+                                      padding: const EdgeInsets.all(3),
+                                      decoration: BoxDecoration(
+                                        color: KwangColor.grey100,
+                                        shape: BoxShape.circle,
+                                        border: Border.all(
+                                            color: KwangColor.grey500),
+                                      ),
+                                      child: SvgPicture.asset(
+                                          "assets/icons/ic_16_close.svg"),
                                     ),
-                                    child: SvgPicture.asset(
-                                        "assets/icons/ic_16_close.svg"),
                                   ),
                                 )
                             ],

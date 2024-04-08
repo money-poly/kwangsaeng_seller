@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:kwangsaeng_seller/models/menu.dart';
 import 'package:kwangsaeng_seller/models/origin.dart';
 import 'package:kwangsaeng_seller/services/menu_service.dart';
@@ -12,6 +13,8 @@ enum MenuUpdateViewType {
   const MenuUpdateViewType(this.str);
   final String str;
 }
+
+enum ImgType { empty, file, url }
 
 class MenuUpdateViewModel with ChangeNotifier {
   final MenuService _service = MenuService();
@@ -33,7 +36,8 @@ class MenuUpdateViewModel with ChangeNotifier {
       TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   /* 기타 입력 값 */
-  String? _imgUrl;
+  dynamic _imgUrl;
+  ImgType _imgType = ImgType.empty;
   final List<Tuple2<TextEditingController, TextEditingController>> _origins = [
     Tuple2(TextEditingController(), TextEditingController())
   ];
@@ -49,7 +53,8 @@ class MenuUpdateViewModel with ChangeNotifier {
   TextEditingController get regularPriceController => _regularPriceController;
   TextEditingController get discountPriceController => _discountPriceController;
   TextEditingController get descriptionController => _descriptionController;
-  String? get imgUrl => _imgUrl;
+  dynamic get imgUrl => _imgUrl;
+  ImgType get imgType => _imgType;
   List<Tuple2<TextEditingController, TextEditingController>> get origins =>
       _origins;
   double get discountRate => _discountRate;
@@ -88,6 +93,7 @@ class MenuUpdateViewModel with ChangeNotifier {
   void initMenu(int menuId) async {
     changeIsLoading(true);
     _initialMenu = await _service.getMenuDetail(menuId);
+    initImg();
     _nameController.text = _initialMenu!.name;
     _regularPriceController.text = _initialMenu!.regularPrice.toString();
     _discountPriceController.text = _initialMenu!.discountPrice.toString();
@@ -111,6 +117,15 @@ class MenuUpdateViewModel with ChangeNotifier {
     // setDiscountRate();
     changeIsLoading(false);
     notifyListeners();
+  }
+
+  void initImg() {
+    if (_initialMenu!.menuPictureUrl != null) {
+      _imgType = ImgType.url;
+      _imgUrl = _initialMenu!.menuPictureUrl;
+    } else {
+      _imgType = ImgType.empty;
+    }
   }
 
   void setDiscountRate() {
@@ -148,7 +163,30 @@ class MenuUpdateViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  void pickImage() {}
+  Future<void> uploadImg() async {
+    final picker = ImagePicker();
+    final pickedImg = await picker.pickImage(source: ImageSource.gallery);
+    try {
+      if (pickedImg != null) {
+        updateImgUrl(pickedImg.path, imgType: ImgType.file);
+      } else {
+        showToast("이미지를 가져오는데 실패했습니다.");
+      }
+    } catch (e) {
+      throw Exception("이미지를 가져오는데 실패했습니다.");
+    }
+    notifyListeners();
+  }
+
+  void updateImgUrl(dynamic imgUrl, {ImgType imgType = ImgType.url}) {
+    if (imgUrl == null) {
+      _imgType = ImgType.empty;
+    } else {
+      _imgType = imgType;
+    }
+    _imgUrl = imgUrl;
+    notifyListeners();
+  }
 
   /* 유효성 검사 */
   bool checkAreAllValid() {
@@ -208,6 +246,13 @@ class MenuUpdateViewModel with ChangeNotifier {
   /* 메뉴 등록 및 수정 */
   Future<bool> register() async {
     changeIsLoading(true);
+
+    if (imgUrl != null) {
+      updateImgUrl(await _service.uploadMenuImg(imgUrl), imgType: ImgType.url);
+    } else {
+      showToast("이미지 업로드에 실패했습니다.");
+    }
+
     if (await _service.registerMenu(
         _nameController.text,
         _descriptionController.text,
@@ -230,6 +275,15 @@ class MenuUpdateViewModel with ChangeNotifier {
 
   Future<bool> modify() async {
     changeIsLoading(true);
+    if (imgType == ImgType.file) {
+      try {
+        updateImgUrl(await _service.uploadMenuImg(imgUrl),
+            imgType: ImgType.url);
+      } catch (e) {
+        showToast("이미지 업로드에 실패했습니다.");
+      }
+    }
+
     if (await _service.modifyMenu(
         _initialMenuId!,
         _nameController.text,
@@ -240,7 +294,8 @@ class MenuUpdateViewModel with ChangeNotifier {
         origins
             .where((e) => e.item1.text.isNotEmpty && e.item2.text.isNotEmpty)
             .map((e) => Origin(ingredient: e.item1.text, country: e.item2.text))
-            .toList())) {
+            .toList(),
+        imgUrl)) {
       showToast("메뉴를 수정했습니다.");
       changeIsLoading(false);
       return true;

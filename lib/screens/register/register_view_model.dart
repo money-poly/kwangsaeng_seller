@@ -4,11 +4,28 @@ import 'package:kwangsaeng_seller/services/store_service.dart';
 import 'package:kwangsaeng_seller/utils.dart/phone_formatter.dart';
 import 'package:kwangsaeng_seller/utils.dart/time_formatter.dart';
 
+enum StoreUpdateViewType {
+  register("등록"),
+  edit("수정");
+
+  const StoreUpdateViewType(this.str);
+  final String str;
+}
+
 enum TimeType { open, close }
 
 class RegisterViewModel with ChangeNotifier {
   final StoreService _service = StoreService();
   final formKey = GlobalKey<FormState>();
+  late StoreUpdateViewType _viewMode;
+  StoreDetail? _initialStore;
+
+  /* ViewMode edit 에서만 사용 */
+  String? _storeImg;
+  final TextEditingController _descriptionController = TextEditingController();
+  StoreDetail? get initialStore => _initialStore;
+  String? get storeImg => _storeImg;
+  TextEditingController get descriptionController => _descriptionController;
 
   /* 텍스트 컨트롤러 */
   final TextEditingController _nameController = TextEditingController();
@@ -70,6 +87,7 @@ class RegisterViewModel with ChangeNotifier {
   bool _isLoading = true;
   bool _isRegistering = false;
   bool _areValidRegister = false;
+  bool _areValidModify = false;
   bool _isValidName = false;
   bool _isValidStoreName = false;
   bool _isValidPhone = false;
@@ -81,6 +99,7 @@ class RegisterViewModel with ChangeNotifier {
   bool get isLoading => _isLoading;
   bool get isRegistering => _isRegistering;
   bool get areValidRegister => _areValidRegister;
+  bool get areValidModify => _areValidModify;
   bool get isValidName => _isValidName;
   bool get isValidStoreName => _isValidStoreName;
   bool get isValidPhone => _isValidPhone;
@@ -96,29 +115,70 @@ class RegisterViewModel with ChangeNotifier {
   bool get isPhoneValidated => _isPhoneValidated;
   bool get isOperationTimeValidated => _isOperationTimeValidated;
 
-  RegisterViewModel() {
+  RegisterViewModel({type = StoreUpdateViewType.register}) {
+    if (type == StoreUpdateViewType.edit) {
+      _viewMode = StoreUpdateViewType.edit;
+    }
+    init();
+  }
+
+  void init() async {
+    initListener();
+    getCategories();
+    if (_viewMode == StoreUpdateViewType.edit) {
+      initStore();
+    } else {
+      _isLoading = false;
+    }
+  }
+
+  void initStore() async {
+    _initialStore = await _service.getStoreDetail();
+    _storeImg = _initialStore!.imgUrl;
+    _storeNameController.text = _initialStore!.name;
+    initSelectedCategory();
+    updateCookingTime(_initialStore!.cookingTime);
+    updateOpenTime(timeParser(_initialStore!.openTime));
+    updateCloseTime(timeParser(_initialStore!.closeTime));
+    _selectedAreaNumber = _initialStore!.phone.split("-")[0];
+    _phoneController.text =
+        _initialStore!.phone.split("-")[1] + _initialStore!.phone.split("-")[2];
+    _addressController.text = _initialStore!.address;
+    _detailAddressController.text = _initialStore!.addressDetail ?? "";
+    _descriptionController.text = _initialStore!.description ?? "";
+    _isLoading = false;
+    notifyListeners();
+  }
+
+  void initListener() {
     _nameController.addListener(() {
       checkAreValidRegister();
+      checkAreValidModify();
     });
     _storeNameController.addListener(() {
       checkAreValidRegister();
+      checkAreValidModify();
     });
     _phoneController.addListener(() {
       checkAreValidRegister();
+      checkAreValidModify();
     });
     _businessNumberController.addListener(() {
       checkAreValidRegister();
+      checkAreValidModify();
     });
     _addressController.addListener(() {
       checkAreValidRegister();
+      checkAreValidModify();
     });
     _categoryController.addListener(() {
       checkAreValidRegister();
+      checkAreValidModify();
     });
-    getCategories();
   }
 
   void getCategories() {
+    // [TODO] 서버에서 카테고리 받아오기
     _categories = [
       StoreCategory(id: 3, name: "도시락"),
       StoreCategory(id: 4, name: "뷔페"),
@@ -127,8 +187,15 @@ class RegisterViewModel with ChangeNotifier {
       StoreCategory(id: 7, name: "과일/야채"),
     ];
     _isSelectedCategory = List.generate(_categories.length, (index) => false);
-    _isLoading = false;
     notifyListeners();
+  }
+
+  void initSelectedCategory() {
+    for (var category in _initialStore!.categories) {
+      _isSelectedCategory[_categories.indexWhere((e) => e.name == category)] =
+          true;
+    }
+    updateCategoryController();
   }
 
   /* 값 업데이트 */
@@ -140,6 +207,7 @@ class RegisterViewModel with ChangeNotifier {
     }
     updateCategoryController();
     checkAreValidRegister();
+    checkAreValidModify();
   }
 
   void updateCategoryController() {
@@ -153,11 +221,13 @@ class RegisterViewModel with ChangeNotifier {
   void updateAddress(String address) {
     _addressController.text = address;
     checkAreValidRegister();
+    checkAreValidModify();
   }
 
   void updateCookingTime(int cookingTime) {
     _cookingTime = cookingTime;
     checkAreValidRegister();
+    checkAreValidModify();
   }
 
   void updateSelectTime(TimeType type) {
@@ -167,23 +237,27 @@ class RegisterViewModel with ChangeNotifier {
       _selectedTime = TimeType.close;
     }
     checkAreValidRegister();
+    checkAreValidModify();
   }
 
   void updateOpenTime(TimeOfDay time) {
     validateOperationTime();
     _openTime = time;
     checkAreValidRegister();
+    checkAreValidModify();
   }
 
   void updateCloseTime(TimeOfDay time) {
     validateOperationTime();
     _closeTime = time;
     checkAreValidRegister();
+    checkAreValidModify();
   }
 
   void updateAreaNumber(String areaNumber) {
     _selectedAreaNumber = areaNumber;
     checkAreValidRegister();
+    checkAreValidModify();
   }
 
   /* validated 여부 변경 */
@@ -266,7 +340,26 @@ class RegisterViewModel with ChangeNotifier {
     notifyListeners();
   }
 
-  /* 가게 등록 */
+  void checkAreValidModify() {
+    checkValidStoreName();
+    checkValidCategory();
+    checkValidPhone();
+    checkValidAddress();
+    checkValidOperationTime();
+
+    if (_isValidStoreName == true &&
+        _isValidCategory == true &&
+        _isValidPhone == true &&
+        _isValidAddress == true &&
+        _isValidOperationTime == true) {
+      _areValidModify = true;
+    } else {
+      _areValidModify = false;
+    }
+    notifyListeners();
+  }
+
+  /* 가게 등록 및 수정 */
   Future<bool> register() async {
     if (await _service.registerStore(
         _nameController.text,
@@ -280,7 +373,30 @@ class RegisterViewModel with ChangeNotifier {
             .toList(),
         _cookingTime,
         timeFormatter(_openTime, TimeFormat.timeTo24Str),
-        timeFormatter(_closeTime, TimeFormat.timeTo24Str))) {
+        timeFormatter(_closeTime, TimeFormat.timeTo24Str),
+        addressDetail: _detailAddressController.text)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  Future<bool> modify() async {
+    if (await _service.modifyStore(
+      _storeNameController.text,
+      _addressController.text,
+      "$_selectedAreaNumber-${phoneFormatter(_phoneController.text)}",
+      _isSelectedCategory.indexed
+          .where((e) => e.$2 == false)
+          .map((e) => _categories[e.$1].id)
+          .toList(),
+      _cookingTime,
+      timeFormatter(_openTime, TimeFormat.timeTo24Str),
+      timeFormatter(_closeTime, TimeFormat.timeTo24Str),
+      _storeImg,
+      _descriptionController.text,
+      _detailAddressController.text,
+    )) {
       return true;
     } else {
       return false;
