@@ -23,6 +23,7 @@ class Menu extends Equatable {
   String name;
   int discountRate;
   int discountPrice;
+  MenuStatus status;
   int? regularPrice;
   String? imgUrl;
   String? description;
@@ -30,7 +31,6 @@ class Menu extends Equatable {
   int? view;
   List<Tag>? tags;
   List<Origin>? origins;
-  MenuStatus? status;
 
   Menu({
     required this.id,
@@ -38,13 +38,13 @@ class Menu extends Equatable {
     required this.imgUrl,
     required this.discountRate,
     required this.discountPrice,
+    required this.status,
     this.regularPrice,
     this.description,
     this.store,
     this.view,
     this.tags,
     this.origins,
-    this.status,
   });
 
   factory Menu.fromJson(Map<String, dynamic> json) => Menu(
@@ -52,8 +52,8 @@ class Menu extends Equatable {
         name: json['name'],
         discountRate: json['discountRate'],
         discountPrice: json['sellingPrice'],
-        /* Optional */
         status: strToMenuStatus(json['status']),
+        /* Optional */
         imgUrl: json['menuPictureUrl'],
         regularPrice: json['price'],
         description: json['description'],
@@ -68,6 +68,7 @@ class Menu extends Equatable {
         name: json['name'],
         discountRate: json['discountRate'],
         discountPrice: json['salePrice'],
+        status: strToMenuStatus(json['status']),
         /* Optional */
         imgUrl: json['menuPictureUrl'],
         regularPrice: json['price'],
@@ -84,6 +85,7 @@ class Menu extends Equatable {
         discountRate: json['discountRate'],
         discountPrice: json['price'],
         imgUrl: json['menuPictureUrl'],
+        status: strToMenuStatus(json['status']),
         /* Optional */
         regularPrice: json['price'],
         description: json['description'],
@@ -107,6 +109,7 @@ class MenuDetail {
   int view;
   List<String> cautions;
   List<Origin> origins;
+  MenuStatus status;
   /* Optional */
   String? menuPictureUrl;
   String? description;
@@ -121,6 +124,7 @@ class MenuDetail {
     required this.view,
     required this.origins,
     required this.cautions,
+    required this.status,
     this.menuPictureUrl,
     this.description,
   });
@@ -141,6 +145,7 @@ class MenuDetail {
             : (json['countryOfOrigin'] as List)
                 .map((e) => Origin.fromJson(e))
                 .toList(),
+        status: strToMenuStatus(json['status']),
         /* Optional */
         menuPictureUrl: json['menuPictureUrl'],
         description: json['description'],
