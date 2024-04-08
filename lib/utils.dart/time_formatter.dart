@@ -13,3 +13,8 @@ String timeFormatter(TimeOfDay time, TimeFormat format) {
       return "${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}";
   }
 }
+
+TimeOfDay timeParser(String timeStr) {
+  final time = timeStr.split(":");
+  return TimeOfDay(hour: int.parse(time[0]), minute: int.parse(time[1]));
+}
