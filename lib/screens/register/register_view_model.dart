@@ -381,7 +381,7 @@ class RegisterViewModel with ChangeNotifier {
         '${_businessNumberController.text.substring(0, 3)}-${_businessNumberController.text.substring(3, 5)}-${_businessNumberController.text.substring(5)}',
         "$_selectedAreaNumber-${phoneFormatter(_phoneController.text)}",
         _isSelectedCategory.indexed
-            .where((e) => e.$2 == false)
+            .where((e) => e.$2 == true)
             .map((e) => _categories[e.$1].id)
             .toList(),
         _cookingTime,
@@ -408,7 +408,7 @@ class RegisterViewModel with ChangeNotifier {
       _addressController.text,
       "$_selectedAreaNumber-${phoneFormatter(_phoneController.text)}",
       _isSelectedCategory.indexed
-          .where((e) => e.$2 == false)
+          .where((e) => e.$2 == true)
           .map((e) => _categories[e.$1].id)
           .toList(),
       _cookingTime,
