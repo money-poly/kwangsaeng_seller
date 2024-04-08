@@ -137,8 +137,8 @@ class HomeView extends StatelessWidget {
                                             style: KwangStyle.btn2SB),
                                         const SizedBox(height: 8),
                                         GestureDetector(
-                                          onTap: () {
-                                            Navigator.of(context).push(
+                                          onTap: () async {
+                                            await Navigator.of(context).push(
                                               MaterialPageRoute(
                                                 builder: (context) =>
                                                     ChangeNotifierProvider(
@@ -149,6 +149,7 @@ class HomeView extends StatelessWidget {
                                                 ),
                                               ),
                                             );
+                                            viewModel.init();
                                           },
                                           behavior: HitTestBehavior.translucent,
                                           child: Row(
