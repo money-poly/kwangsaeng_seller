@@ -67,13 +67,45 @@ class StoreModifyView extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              // [TODO] storeImgType
                               Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 20),
-                                  child: ImgUploadCard(
-                                      imgUrl: viewModel.storeImg,
-                                      imgType: ImgType.empty)), // [수정]
+                                padding:
+                                    const EdgeInsets.only(bottom: 20, top: 12),
+                                child: Stack(
+                                  children: [
+                                    GestureDetector(
+                                        onTap: () async {
+                                          await viewModel.uploadImg();
+                                        },
+                                        child: ImgUploadCard(
+                                            imgUrl: viewModel.storeImg,
+                                            imgType: viewModel.imgType)),
+                                    if (viewModel.imgType != ImgType.empty)
+                                      Positioned(
+                                        top: 0,
+                                        right: 0,
+                                        child: GestureDetector(
+                                          onTap: () {
+                                            viewModel.updateImgUrl(
+                                                null, ImgType.empty);
+                                          },
+                                          child: Container(
+                                            width: 24,
+                                            height: 24,
+                                            padding: const EdgeInsets.all(3),
+                                            decoration: BoxDecoration(
+                                              color: KwangColor.grey100,
+                                              shape: BoxShape.circle,
+                                              border: Border.all(
+                                                  color: KwangColor.grey500),
+                                            ),
+                                            child: SvgPicture.asset(
+                                                "assets/icons/ic_16_close.svg"),
+                                          ),
+                                        ),
+                                      )
+                                  ],
+                                ),
+                              ),
                               const TextFieldTitle(title: "업체명"),
                               CustomTextField(
                                 controller: viewModel.storeNameController,

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_styled_toast/flutter_styled_toast.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:kwangsaeng_seller/models/store.dart';
+import 'package:kwangsaeng_seller/screens/menu/menu_update_view_model.dart';
 import 'package:kwangsaeng_seller/services/store_service.dart';
 import 'package:kwangsaeng_seller/utils.dart/phone_formatter.dart';
 import 'package:kwangsaeng_seller/utils.dart/time_formatter.dart';
@@ -22,9 +25,11 @@ class RegisterViewModel with ChangeNotifier {
 
   /* ViewMode edit 에서만 사용 */
   String? _storeImg;
+  ImgType _imgType = ImgType.empty;
   final TextEditingController _descriptionController = TextEditingController();
   StoreDetail? get initialStore => _initialStore;
   String? get storeImg => _storeImg;
+  ImgType get imgType => _imgType;
   TextEditingController get descriptionController => _descriptionController;
 
   /* 텍스트 컨트롤러 */
@@ -134,7 +139,7 @@ class RegisterViewModel with ChangeNotifier {
 
   void initStore() async {
     _initialStore = await _service.getStoreDetail();
-    _storeImg = _initialStore!.imgUrl;
+    initImg();
     _storeNameController.text = _initialStore!.name;
     initSelectedCategory();
     updateCookingTime(_initialStore!.cookingTime);
@@ -148,6 +153,14 @@ class RegisterViewModel with ChangeNotifier {
     _descriptionController.text = _initialStore!.description ?? "";
     _isLoading = false;
     notifyListeners();
+  }
+
+  void initImg() {
+    if (_initialStore!.imgUrl != null) {
+      updateImgUrl(_initialStore!.imgUrl, ImgType.url);
+    } else {
+      updateImgUrl(_initialStore!.imgUrl, ImgType.empty);
+    }
   }
 
   void initListener() {
@@ -382,6 +395,14 @@ class RegisterViewModel with ChangeNotifier {
   }
 
   Future<bool> modify() async {
+    if (_imgType != ImgType.empty) {
+      try {
+        updateImgUrl(await _service.uploadStoreImg(storeImg!), ImgType.url);
+      } catch (e) {
+        showToast("이미지 업로드에 실패했습니다.");
+      }
+    }
+
     if (await _service.modifyStore(
       _storeNameController.text,
       _addressController.text,
@@ -401,6 +422,28 @@ class RegisterViewModel with ChangeNotifier {
     } else {
       return false;
     }
+  }
+
+  /* 이미지 업로드 */
+  Future<void> uploadImg() async {
+    final picker = ImagePicker();
+    final pickedImg = await picker.pickImage(source: ImageSource.gallery);
+    try {
+      if (pickedImg != null) {
+        updateImgUrl(pickedImg.path, ImgType.file);
+      } else {
+        showToast("이미지를 가져오는데 실패했습니다.");
+      }
+    } catch (e) {
+      throw Exception("이미지를 가져오는데 실패했습니다.");
+    }
+    notifyListeners();
+  }
+
+  void updateImgUrl(dynamic imgUrl, ImgType imgType) {
+    _imgType = imgType;
+    _storeImg = imgUrl;
+    notifyListeners();
   }
 
   void changeIsRegistering(bool isRegistering) {
