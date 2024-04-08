@@ -37,10 +37,14 @@ class StoreHome {
         name: json['name'],
         status: json['status'],
         owner: json['businessLeaderName'],
-        category: json['category'],
+        category: json['category'] == null
+            ? ""
+            : (json['category'] as List)
+                .map((e) => e['name'].toString())
+                .join(", "),
         storePictureUrl: json['storePictureUrl'],
-        totalMenuCnt: int.parse(json['totalMenuCount']),
-        discountMenuCnt: int.parse(json['discountMenuCount']),
+        totalMenuCnt: json['totalMenuCount'],
+        discountMenuCnt: json['discountMenuCount'],
         tag: json['tag'] != null ? Tag.fromJson(json['tag']) : null,
       );
 }
@@ -49,7 +53,8 @@ class StoreDetail {
   int id;
   String name;
   List<String> categories;
-  String address; // address + addressDetail
+  String address;
+  String? addressDetail;
   LatLng latLng;
   String pickUpTime;
   String openTime;
@@ -58,7 +63,9 @@ class StoreDetail {
   List<String> notes;
   List<Origin> origins;
   String phone;
+  int cookingTime;
   /* Optional */
+  String? description;
   String? imgUrl;
 
   StoreDetail({
@@ -66,6 +73,7 @@ class StoreDetail {
     required this.name,
     required this.categories,
     required this.address,
+    required this.addressDetail,
     required this.latLng,
     required this.pickUpTime,
     required this.openTime,
@@ -74,6 +82,8 @@ class StoreDetail {
     required this.notes,
     required this.origins,
     required this.phone,
+    required this.cookingTime,
+    this.description,
     this.imgUrl,
   });
 
@@ -90,10 +100,8 @@ class StoreDetail {
       categories: (json['categories'] as List)
           .map((e) => e['name'].toString())
           .toList(),
-      address: json['detail']['address'] +
-          (json['detail']['addressDetail'] == null
-              ? ""
-              : " ${json['detail']['addressDetail']}"),
+      address: json['detail']['address'],
+      addressDetail: json['detail']['addressDetail'],
       latLng: LatLng(
         double.parse(json['detail']['lat']),
         double.parse(json['detail']['lon']),
@@ -105,7 +113,9 @@ class StoreDetail {
       notes: (json['caution'] as List).map((e) => e.toString()).toList(),
       origins: origins,
       phone: json['detail']['phone'],
+      cookingTime: json['detail']['cookingTime'],
       /* Optional */
+      description: json['detail']['description'],
       imgUrl: json['detail']['storePictureUrl'],
     );
   }
