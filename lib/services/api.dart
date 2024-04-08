@@ -22,16 +22,17 @@ class API {
       {body, UrlType type = UrlType.dummy, bool needToken = false}) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    if (needToken && prefs.getString("accessTokenExp") != null && prefs.getString("accessToken") != null) {
+    if (needToken &&
+        prefs.getString("accessTokenExp") != null &&
+        prefs.getString("accessToken") != null) {
       final DateTime accessTokenExp =
           DateTime.parse(prefs.getString("accessTokenExp")!);
       final DateTime refreshTokenExp =
           DateTime.parse(prefs.getString("refreshTokenExp")!);
       if (refreshTokenExp.isBefore(DateTime.now())) {
         throw CustomException(ErrorCode.tokenExpired);
-      }
-      else if (accessTokenExp.isBefore(DateTime.now())) {
-        await refreshToken();
+      } else if (accessTokenExp.isBefore(DateTime.now())) {
+        await renewTokens();
       }
     }
 
@@ -61,7 +62,12 @@ class API {
     }
   }
 
-  Future<void> refreshToken() async {
+  Future<String> getAccessToken() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString("accessToken")!;
+  }
+
+  Future<void> renewTokens() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final res = await req(
       '/auth/reissue',

@@ -16,7 +16,7 @@ Future<bool> checkValidToken() async {
   final storeId = prefs.getString("storeId");
 
   print(
-      "[LOG] accessToken: $accessToken / refreshToken: $refreshToken / accessTokenExp: $accessTokenExp / refreshTokenExp: $refreshTokenExp / storeId: $storeId");
+      "[LOG] storeId: $storeId / accessToken: $accessToken / refreshToken: $refreshToken / accessTokenExp: $accessTokenExp / refreshTokenExp: $refreshTokenExp");
 
   if (accessToken == null ||
       refreshToken == null ||
@@ -28,7 +28,7 @@ Future<bool> checkValidToken() async {
     if (accessTokenExp.isBefore(DateTime.now()) ||
         refreshTokenExp.isBefore(DateTime.now())) {
       try {
-        await api.refreshToken();
+        await api.renewTokens();
         return true;
       } catch (e) {
         return false;
