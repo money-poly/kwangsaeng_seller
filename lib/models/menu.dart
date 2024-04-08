@@ -109,8 +109,9 @@ class MenuDetail {
   int view;
   List<String> cautions;
   List<Origin> origins;
-  MenuStatus? status;
+  DateTime expiredDate;
   /* Optional */
+  MenuStatus? status;
   String? menuPictureUrl;
   String? description;
 
@@ -124,6 +125,7 @@ class MenuDetail {
     required this.view,
     required this.origins,
     required this.cautions,
+    required this.expiredDate,
     this.status,
     this.menuPictureUrl,
     this.description,
@@ -145,6 +147,9 @@ class MenuDetail {
             : (json['countryOfOrigin'] as List)
                 .map((e) => Origin.fromJson(e))
                 .toList(),
+        expiredDate: json['expiredDate'] == null
+            ? DateTime.now() // [수정] 추후 삭제
+            : DateTime.parse(json['expiredDate']),
         status: json['status'] == null ? null : strToMenuStatus(json['status']),
         /* Optional */
         menuPictureUrl: json['menuPictureUrl'],
