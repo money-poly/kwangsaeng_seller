@@ -109,7 +109,7 @@ class MenuDetail {
   int view;
   List<String> cautions;
   List<Origin> origins;
-  MenuStatus status;
+  MenuStatus? status;
   /* Optional */
   String? menuPictureUrl;
   String? description;
@@ -124,7 +124,7 @@ class MenuDetail {
     required this.view,
     required this.origins,
     required this.cautions,
-    required this.status,
+    this.status,
     this.menuPictureUrl,
     this.description,
   });
@@ -145,7 +145,7 @@ class MenuDetail {
             : (json['countryOfOrigin'] as List)
                 .map((e) => Origin.fromJson(e))
                 .toList(),
-        status: strToMenuStatus(json['status']),
+        status: json['status'] == null ? null : strToMenuStatus(json['status']),
         /* Optional */
         menuPictureUrl: json['menuPictureUrl'],
         description: json['description'],

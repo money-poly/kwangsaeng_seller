@@ -27,7 +27,7 @@ class MenuMainViewModel with ChangeNotifier {
   Future<void> changeMenuStatus(int idx, MenuStatus updateStatus) async {
     _isWorking = true;
     if (await _service.changeMenuStatus(
-        _menus[idx].id, _menus[idx].status!, updateStatus)) {
+        _menus[idx].id, _menus[idx].status, updateStatus)) {
       _menus[idx].status = updateStatus;
       showToast("메뉴 상태가 변경 되었습니다.");
     } else {

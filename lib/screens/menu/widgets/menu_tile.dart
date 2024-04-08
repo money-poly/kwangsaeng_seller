@@ -50,7 +50,7 @@ class MenuTile extends StatelessWidget {
                           ),
                         );
                       },
-                      child: MenuStatusWidget(status: menu!.status!)),
+                      child: MenuStatusWidget(status: menu!.status)),
                   GestureDetector(
                     onTap: () {
                       showModalBottomSheet(
