@@ -2,6 +2,7 @@ import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:kwangsaeng_seller/screens/register/register_view_model.dart';
 import 'package:kwangsaeng_seller/screens/store/store_modify_view.dart';
 import 'package:kwangsaeng_seller/screens/store/store_preview_view_model.dart';
 import 'package:kwangsaeng_seller/screens/store/widgets/store_info_row.dart';
@@ -28,7 +29,7 @@ class StorePreviewView extends StatelessWidget {
             backgroundColor: KwangColor.grey100,
             appBar: AppBar(
               title: Text("매장 상세", style: KwangStyle.header2),
-              toolbarHeight: 44,
+              toolbarHeight: 52,
               titleSpacing: 8,
               centerTitle: false,
               leading: Padding(
@@ -46,12 +47,16 @@ class StorePreviewView extends StatelessWidget {
               ),
               actions: [
                 GestureDetector(
-                  onTap: () {
-                    Navigator.of(context).push(
+                  onTap: () async {
+                    await Navigator.of(context).push(
                       MaterialPageRoute(
-                        builder: (context) => const StoreModifyView(),
+                        builder: (context) => ChangeNotifierProvider(
+                            create: (_) => RegisterViewModel(
+                                type: StoreUpdateViewType.edit),
+                            child: const StoreModifyView()),
                       ),
                     );
+                    viewModel.init();
                   },
                   child: Padding(
                     padding: const EdgeInsets.only(right: 20),
@@ -106,10 +111,21 @@ class StorePreviewView extends StatelessWidget {
                             softWrap: true,
                             overflow: TextOverflow.visible,
                           ),
+                          if (viewModel.store!.description != null &&
+                              viewModel.store!.description!.isNotEmpty)
+                            Padding(
+                              padding: const EdgeInsets.only(top: 8),
+                              child: Text(
+                                viewModel.store!.description!,
+                                style: KwangStyle.body1M
+                                    .copyWith(color: KwangColor.grey700),
+                              ),
+                            )
                         ],
                       ),
                     ),
                     Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 20),
                       width: MediaQuery.of(context).size.width - 40,
                       height: 1,
                       color: KwangColor.grey300,
@@ -121,7 +137,10 @@ class StorePreviewView extends StatelessWidget {
                         children: [
                           StoreInfoRow(
                               title: "매장주소",
-                              content: viewModel.store!.address,
+                              content: viewModel.store!.address +
+                                  (viewModel.store!.addressDetail == null
+                                      ? ""
+                                      : " ${viewModel.store!.addressDetail}"),
                               hasPaddingBottom: true),
                           StoreInfoRow(
                               title: "영업시간",
