@@ -51,8 +51,8 @@ class StorePreviewView extends StatelessWidget {
                     await Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) => ChangeNotifierProvider(
-                            create: (_) => RegisterViewModel(
-                                type: StoreUpdateViewType.edit),
+                            create: (_) =>
+                                RegisterViewModel(StoreUpdateViewType.edit),
                             child: const StoreModifyView()),
                       ),
                     );

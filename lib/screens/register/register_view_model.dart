@@ -93,24 +93,14 @@ class RegisterViewModel with ChangeNotifier {
   bool _isRegistering = false;
   bool _areValidRegister = false;
   bool _areValidModify = false;
-  bool _isValidName = false;
-  bool _isValidStoreName = false;
   bool _isValidPhone = false;
-  bool _isValidBusinessNumber = false;
-  bool _isValidCategory = false;
-  bool _isValidAddress = false;
   bool _isValidOperationTime = false;
 
   bool get isLoading => _isLoading;
   bool get isRegistering => _isRegistering;
   bool get areValidRegister => _areValidRegister;
   bool get areValidModify => _areValidModify;
-  bool get isValidName => _isValidName;
-  bool get isValidStoreName => _isValidStoreName;
   bool get isValidPhone => _isValidPhone;
-  bool get isValidBusinessNumber => _isValidBusinessNumber;
-  bool get isValidCategory => _isValidCategory;
-  bool get isValidAddress => _isValidAddress;
   bool get isValidOperationTime => _isValidOperationTime;
 
   /* validator 작동 여부 */
@@ -120,9 +110,11 @@ class RegisterViewModel with ChangeNotifier {
   bool get isPhoneValidated => _isPhoneValidated;
   bool get isOperationTimeValidated => _isOperationTimeValidated;
 
-  RegisterViewModel({type = StoreUpdateViewType.register}) {
+  RegisterViewModel(StoreUpdateViewType type) {
     if (type == StoreUpdateViewType.edit) {
       _viewMode = StoreUpdateViewType.edit;
+    } else {
+      _viewMode = StoreUpdateViewType.register;
     }
     init();
   }
@@ -291,35 +283,9 @@ class RegisterViewModel with ChangeNotifier {
   }
 
   /* 유효성 검증 */
-  void checkValidName() {
-    _isValidName = _nameController.text.isNotEmpty;
-    notifyListeners();
-  }
-
-  void checkValidStoreName() {
-    _isValidStoreName = _storeNameController.text.isNotEmpty;
-    notifyListeners();
-  }
-
   void checkValidPhone() {
     _isValidPhone =
         _phoneController.text.isNotEmpty && _phoneController.text.length >= 7;
-    notifyListeners();
-  }
-
-  void checkValidBusinessNumber() {
-    _isValidBusinessNumber = _businessNumberController.text.isNotEmpty &&
-        _businessNumberController.text.length == 10;
-    notifyListeners();
-  }
-
-  void checkValidCategory() {
-    _isValidCategory = _isSelectedCategory.contains(true);
-    notifyListeners();
-  }
-
-  void checkValidAddress() {
-    _isValidAddress = _addressController.text.isNotEmpty;
     notifyListeners();
   }
 
@@ -331,21 +297,10 @@ class RegisterViewModel with ChangeNotifier {
   }
 
   void checkAreValidRegister() {
-    checkValidName();
-    checkValidStoreName();
-    checkValidCategory();
     checkValidPhone();
-    checkValidBusinessNumber();
-    checkValidAddress();
     checkValidOperationTime();
 
-    if (_isValidName == true &&
-        _isValidStoreName == true &&
-        _isValidCategory == true &&
-        _isValidPhone == true &&
-        _isValidBusinessNumber == true &&
-        _isValidAddress == true &&
-        _isValidOperationTime == true) {
+    if (formKey.currentState!.validate() && _isValidOperationTime) {
       _areValidRegister = true;
     } else {
       _areValidRegister = false;
@@ -354,17 +309,10 @@ class RegisterViewModel with ChangeNotifier {
   }
 
   void checkAreValidModify() {
-    checkValidStoreName();
-    checkValidCategory();
     checkValidPhone();
-    checkValidAddress();
     checkValidOperationTime();
 
-    if (_isValidStoreName == true &&
-        _isValidCategory == true &&
-        _isValidPhone == true &&
-        _isValidAddress == true &&
-        _isValidOperationTime == true) {
+    if (formKey.currentState!.validate() && _isValidOperationTime) {
       _areValidModify = true;
     } else {
       _areValidModify = false;

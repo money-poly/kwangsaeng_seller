@@ -97,7 +97,9 @@ class StartView extends StatelessWidget {
                                         builder: (context) =>
                                             ChangeNotifierProvider(
                                                 create: (_) =>
-                                                    RegisterViewModel(),
+                                                    RegisterViewModel(
+                                                        StoreUpdateViewType
+                                                            .register),
                                                 child: const RegisterView()),
                                       ),
                                     );

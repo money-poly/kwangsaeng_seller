@@ -2,13 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:kwangsaeng_seller/screens/register/register_view_model.dart';
+import 'package:kwangsaeng_seller/screens/register/widgets/register_bottom_sheet.dart';
 import 'package:kwangsaeng_seller/styles/color.dart';
 import 'package:kwangsaeng_seller/styles/txt.dart';
 import 'package:kwangsaeng_seller/widgets/custom_textfield.dart';
 import 'package:kwangsaeng_seller/widgets/textfield_title.dart';
 import 'package:provider/provider.dart';
-
-import '../screens/register/widgets/register_bottom_sheet.dart';
 
 class PhoneField extends StatelessWidget {
   const PhoneField({super.key, required this.viewModel});

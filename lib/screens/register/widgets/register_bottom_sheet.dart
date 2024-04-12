@@ -115,7 +115,6 @@ class RegisterBottomSheet extends StatelessWidget {
                   (idx) => GestureDetector(
                     onTap: () {
                       viewModel.updateSelectedCategories(idx);
-                      viewModel.checkValidCategory();
                     },
                     behavior: HitTestBehavior.translucent,
                     child: Padding(

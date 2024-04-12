@@ -46,8 +46,8 @@ class SettingMainView extends StatelessWidget {
                             context,
                             MaterialPageRoute(
                               builder: (context) => ChangeNotifierProvider(
-                                create: (_) => RegisterViewModel(
-                                    type: StoreUpdateViewType.edit),
+                                create: (_) =>
+                                    RegisterViewModel(StoreUpdateViewType.edit),
                                 child: const StoreModifyView(),
                               ),
                             ),

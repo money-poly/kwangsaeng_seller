@@ -133,7 +133,6 @@ class StoreModifyView extends StatelessWidget {
                                       ),
                                     ),
                                   );
-                                  viewModel.checkValidCategory();
                                 },
                                 child: AbsorbPointer(
                                   child: CustomTextField(
@@ -315,7 +314,6 @@ class StoreModifyView extends StatelessWidget {
                                     viewModel.updateAddress(
                                         model.roadAddress.toString());
                                   }
-                                  viewModel.checkValidAddress();
                                 },
                                 child: AbsorbPointer(
                                   child: CustomTextField(

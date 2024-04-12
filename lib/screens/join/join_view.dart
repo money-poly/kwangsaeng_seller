@@ -259,8 +259,8 @@ class JoinView extends StatelessWidget {
                                     MaterialPageRoute(
                                       builder: (context) =>
                                           ChangeNotifierProvider(
-                                              create: (_) =>
-                                                  RegisterViewModel(),
+                                              create: (_) => RegisterViewModel(
+                                                  StoreUpdateViewType.register),
                                               child: const RegisterView()),
                                     ),
                                   );

@@ -7,6 +7,7 @@ import 'package:kwangsaeng_seller/screens/register/widgets/register_bottom_sheet
 import 'package:kwangsaeng_seller/screens/start/waiting_view.dart';
 import 'package:kwangsaeng_seller/styles/color.dart';
 import 'package:kwangsaeng_seller/styles/txt.dart';
+import 'package:kwangsaeng_seller/utils.dart/date_validator.dart';
 import 'package:kwangsaeng_seller/utils.dart/time_formatter.dart';
 import 'package:kwangsaeng_seller/widgets/custom_btn.dart';
 import 'package:kwangsaeng_seller/widgets/loading_page.dart';
@@ -120,6 +121,25 @@ class RegisterView extends StatelessWidget {
                                 maxLength: 10,
                               ),
                               const SizedBox(height: 20),
+                              const TextFieldTitle(title: "개업일자"),
+                              CustomTextField(
+                                controller: viewModel.startDateController,
+                                hintText: "YYYYMMDD",
+                                validator: (input) {
+                                  if (input.isEmpty) {
+                                    return "날짜를 입력해주세요";
+                                  } else {
+                                    final date = dateValidator(input);
+                                    if (date == null) {
+                                      return "올바른 날짜를 입력해주세요";
+                                    }
+                                  }
+                                  return null;
+                                },
+                                keyboardType: TextInputType.number,
+                                maxLength: 8,
+                              ),
+                              const SizedBox(height: 20),
                               const TextFieldTitle(title: "업체 카테고리"),
                               GestureDetector(
                                 onTap: () {
@@ -133,7 +153,6 @@ class RegisterView extends StatelessWidget {
                                       ),
                                     ),
                                   );
-                                  viewModel.checkValidCategory();
                                 },
                                 child: AbsorbPointer(
                                   child: CustomTextField(
@@ -176,7 +195,6 @@ class RegisterView extends StatelessWidget {
                                     viewModel.updateAddress(
                                         model.roadAddress.toString());
                                   }
-                                  viewModel.checkValidAddress();
                                 },
                                 child: AbsorbPointer(
                                   child: CustomTextField(
