@@ -32,6 +32,10 @@ class RegisterViewModel with ChangeNotifier {
   ImgType get imgType => _imgType;
   TextEditingController get descriptionController => _descriptionController;
 
+  /* ViewMode register 에서만 사용 */
+  final TextEditingController _startDateController = TextEditingController();
+  TextEditingController get startDateController => _startDateController;
+
   /* 텍스트 컨트롤러 */
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _storeNameController = TextEditingController();
@@ -156,6 +160,10 @@ class RegisterViewModel with ChangeNotifier {
   }
 
   void initListener() {
+    _startDateController.addListener(() {
+      // [주의] 가게 등록에서만 입력되는 값
+      checkAreValidRegister();
+    });
     _nameController.addListener(() {
       checkAreValidRegister();
       checkAreValidModify();
@@ -327,6 +335,7 @@ class RegisterViewModel with ChangeNotifier {
         _storeNameController.text,
         _addressController.text,
         '${_businessNumberController.text.substring(0, 3)}-${_businessNumberController.text.substring(3, 5)}-${_businessNumberController.text.substring(5)}',
+        _startDateController.text,
         "$_selectedAreaNumber-${phoneFormatter(_phoneController.text)}",
         _isSelectedCategory.indexed
             .where((e) => e.$2 == true)

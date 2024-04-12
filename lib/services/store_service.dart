@@ -15,6 +15,7 @@ class StoreService {
       String storeName,
       String address,
       String businessNumber,
+      String startDate,
       String phone,
       List<int> categories,
       int cookingTime,
@@ -30,6 +31,7 @@ class StoreService {
             if (addressDetail != null) "addressDetail": addressDetail,
             "phone": phone,
             "businessNum": businessNumber,
+            "openedDate": startDate,
             "categories": categories,
             "cookingTime": cookingTime,
             "operationTimes": {
