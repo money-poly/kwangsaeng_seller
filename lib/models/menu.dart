@@ -110,6 +110,7 @@ class MenuDetail {
   List<String> cautions;
   List<Origin> origins;
   DateTime expiredDate;
+  int count;
   /* Optional */
   MenuStatus? status;
   String? menuPictureUrl;
@@ -126,6 +127,7 @@ class MenuDetail {
     required this.origins,
     required this.cautions,
     required this.expiredDate,
+    required this.count,
     this.status,
     this.menuPictureUrl,
     this.description,
@@ -150,6 +152,7 @@ class MenuDetail {
         expiredDate: json['expiredDate'] == null
             ? DateTime.now() // [수정] 추후 삭제
             : DateTime.parse(json['expiredDate']),
+        count: json['count'],
         status: json['status'] == null ? null : strToMenuStatus(json['status']),
         /* Optional */
         menuPictureUrl: json['menuPictureUrl'],
