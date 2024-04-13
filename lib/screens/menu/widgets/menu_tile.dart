@@ -3,11 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:kwangsaeng_seller/models/menu.dart';
+import 'package:kwangsaeng_seller/screens/menu/menu_detail_view.dart';
+import 'package:kwangsaeng_seller/screens/menu/menu_detail_view_model.dart';
 import 'package:kwangsaeng_seller/screens/menu/menu_main_view_model.dart';
+import 'package:kwangsaeng_seller/screens/menu/menu_update_view.dart';
+import 'package:kwangsaeng_seller/screens/menu/menu_update_view_model.dart';
 import 'package:kwangsaeng_seller/screens/menu/widgets/menu_bottom_sheet.dart';
 import 'package:kwangsaeng_seller/screens/menu/widgets/menu_status_widget.dart';
+import 'package:kwangsaeng_seller/screens/menu/widgets/menu_tile_btn.dart';
 import 'package:kwangsaeng_seller/styles/color.dart';
 import 'package:kwangsaeng_seller/styles/txt.dart';
+import 'package:kwangsaeng_seller/widgets/custom_dialog.dart';
 import 'package:provider/provider.dart';
 
 enum MenuTileType { main, changeOrder }
@@ -33,48 +39,18 @@ class MenuTile extends StatelessWidget {
             borderRadius: BorderRadius.circular(8),
             color: KwangColor.grey100,
           ),
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.fromLTRB(12, 14, 12, 10),
           child: Column(
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  GestureDetector(
-                      onTap: () {
-                        showModalBottomSheet(
-                          context: context,
-                          builder: (context) => ChangeNotifierProvider.value(
-                            value: viewModel,
-                            child: MenuBottomSheet(
-                                type: MenuBottomSheetType.status, menuIdx: idx),
-                          ),
-                        );
-                      },
-                      child: MenuStatusWidget(status: menu!.status)),
-                  GestureDetector(
-                    onTap: () {
-                      showModalBottomSheet(
-                        context: context,
-                        builder: (context) => ChangeNotifierProvider.value(
-                          value: viewModel,
-                          child: MenuBottomSheet(
-                              type: MenuBottomSheetType.more, menuIdx: idx),
-                        ),
-                      );
-                    },
-                    child: SvgPicture.asset("assets/icons/ic_24_more.svg",
-                        width: 24, height: 24),
-                  ),
-                ],
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 12),
+              SizedBox(
+                height: 70,
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     menu!.imgUrl == null
                         ? Container(
-                            height: 62,
-                            width: 62,
+                            width: 70,
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
                               color: KwangColor.grey200,
@@ -93,48 +69,168 @@ class MenuTile extends StatelessWidget {
                             borderRadius: BorderRadius.circular(4),
                             child: ExtendedImage.network(
                               menu!.imgUrl!,
-                              width: 62,
-                              height: 62,
+                              width: 70,
+                              height: 70,
                               fit: BoxFit.cover,
                             ),
                           ),
-                    const SizedBox(width: 16),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // [TODO] 카테고리가 제외되면서 임시 삭제. 추후 메뉴 카테고리 결정되면 주석 해제
-                        // Text(
-                        //   "샐러드",
-                        //   style: KwangStyle.body2
-                        //       .copyWith(color: KwangColor.grey600),
-                        // ),
-                        // const SizedBox(height: 2),
-                        Text(menu!.name, style: KwangStyle.body1M),
-                        const SizedBox(height: 4),
-                        Text(
-                            "정가: ${NumberFormat('###,###,###,###').format(menu!.regularPrice).replaceAll(' ', ',')}원",
-                            style: KwangStyle.body1M),
-                      ],
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // [TODO] 카테고리가 제외되면서 임시 삭제. 추후 메뉴 카테고리 결정되면 주석 해제
+                          // Text(
+                          //   "샐러드",
+                          //   style: KwangStyle.body2
+                          //       .copyWith(color: KwangColor.grey600),
+                          // ),
+                          // const SizedBox(height: 2),
+                          Text(menu!.name, style: KwangStyle.body1M),
+                          const SizedBox(height: 4),
+                          Text(
+                              "정가: ${NumberFormat('###,###,###,###').format(menu!.regularPrice).replaceAll(' ', ',')}원",
+                              style: KwangStyle.body1M),
+                        ],
+                      ),
                     ),
+                    const SizedBox(width: 8),
+                    GestureDetector(
+                        onTap: () {
+                          showModalBottomSheet(
+                            context: context,
+                            builder: (context) => ChangeNotifierProvider.value(
+                              value: viewModel,
+                              child: MenuBottomSheet(
+                                  type: MenuBottomSheetType.status,
+                                  menuIdx: idx),
+                            ),
+                          );
+                        },
+                        child: MenuStatusWidget(status: menu!.status)),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 12, bottom: 8),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    SizedBox(
+                      height: 24,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Text(
+                            "판매가:",
+                            style: KwangStyle.btn1SB.copyWith(
+                              color: menu!.status == MenuStatus.sale
+                                  ? KwangColor.red
+                                  : KwangColor.grey500,
+                            ),
+                          ),
+                          const SizedBox(width: 16),
+                          Text(
+                            "${NumberFormat('###,###,###,###').format(menu!.discountPrice).replaceAll(' ', ',')} 원",
+                            style: KwangStyle.btn1SB.copyWith(
+                              color: menu!.status == MenuStatus.sale
+                                  ? KwangColor.black
+                                  : KwangColor.grey500,
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                    if (menu!.status == MenuStatus.sale)
+                      SizedBox(
+                        width: 95,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            GestureDetector(
+                              onTap: () {},
+                              behavior: HitTestBehavior.translucent,
+                              child: SvgPicture.asset(
+                                  "assets/icons/ic_24_minus.svg",
+                                  width: 24,
+                                  height: 24),
+                            ),
+                            Text(
+                              "1",
+                              style: KwangStyle.btn1SB,
+                            ),
+                            GestureDetector(
+                              onTap: () {},
+                              behavior: HitTestBehavior.translucent,
+                              child: SvgPicture.asset(
+                                  "assets/icons/ic_24_plus.svg",
+                                  width: 24,
+                                  height: 24),
+                            ),
+                          ],
+                        ),
+                      ),
                   ],
                 ),
               ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    "판매가:",
-                    style: KwangStyle.btn1SB.copyWith(color: KwangColor.red),
-                  ),
-                  const SizedBox(width: 4),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 4),
-                    child: Text(
-                      "${NumberFormat('###,###,###,###').format(menu!.discountPrice).replaceAll(' ', ',')} 원",
-                      style: KwangStyle.btn1SB,
-                    ),
-                  )
+                  MenuTileBtn(
+                      icon: "preview",
+                      label: "미리보기",
+                      onTap: () async {
+                        await Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => ChangeNotifierProvider(
+                              create: (_) => MenuDetailViewModel(menu!.id),
+                              child: MenuDetailView(menuId: menu!.id),
+                            ),
+                          ),
+                        );
+                        viewModel!.init();
+                      },
+                      enable: menu!.status != MenuStatus.hidden),
+                  MenuTileBtn(
+                      icon: "edit",
+                      label: "수정하기",
+                      onTap: () async {
+                        await Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => ChangeNotifierProvider(
+                              create: (_) =>
+                                  MenuUpdateViewModel(menuId: menu!.id),
+                              child: const MenuUpdateView(),
+                            ),
+                          ),
+                        );
+                        viewModel!.init();
+                      },
+                      enable: true),
+                  MenuTileBtn(
+                      icon: "delete",
+                      label: "삭제하기",
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) => CustomDialog(
+                            title: "메뉴를 삭제하시겠어요?",
+                            content: "선택한 메뉴가 삭제됩니다.",
+                            onCanceled: () {
+                              Navigator.of(context).pop();
+                            },
+                            onConfirmed: () async {
+                              await viewModel!.deleteMenu(menu!.id);
+                              viewModel!.init();
+                              if (context.mounted) {
+                                Navigator.pop(context);
+                              }
+                            },
+                          ),
+                        );
+                      },
+                      enable: true),
                 ],
               )
             ],
