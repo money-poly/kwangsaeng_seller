@@ -42,7 +42,7 @@ class MenuService {
       String description,
       int regularPrice,
       int discountPrice,
-      double discountRate,
+      int discountRate,
       List<Origin> origins,
       String expiredDate,
       String? imgUrl) async {
@@ -94,7 +94,7 @@ class MenuService {
       String description,
       int regularPrice,
       int discountPrice,
-      double discountRate,
+      int discountRate,
       List<Origin> origins,
       String expiredDate,
       String? imgUrl) async {
@@ -107,7 +107,7 @@ class MenuService {
           "name": name,
           "status": "sale",
           "price": regularPrice,
-          "salePrice": discountPrice,
+          "sellingPrice": discountPrice,
           "discountRate": discountRate,
           "description": description,
           "expiredDate": expiredDate,

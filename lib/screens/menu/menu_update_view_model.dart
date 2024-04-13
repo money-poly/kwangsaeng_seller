@@ -261,7 +261,7 @@ class MenuUpdateViewModel with ChangeNotifier {
         _descriptionController.text,
         int.parse(regularPriceController.text),
         int.parse(discountPriceController.text),
-        _discountRate,
+        int.parse(_discountRate.toStringAsPrecision(2)),
         origins
             .where((e) => e.item1.text.isNotEmpty && e.item2.text.isNotEmpty)
             .map((e) => Origin(ingredient: e.item1.text, country: e.item2.text))
@@ -295,7 +295,7 @@ class MenuUpdateViewModel with ChangeNotifier {
         _descriptionController.text,
         int.parse(regularPriceController.text),
         int.parse(discountPriceController.text),
-        _discountRate,
+        int.parse(_discountRate.toStringAsPrecision(2)),
         origins
             .where((e) => e.item1.text.isNotEmpty && e.item2.text.isNotEmpty)
             .map((e) => Origin(ingredient: e.item1.text, country: e.item2.text))
