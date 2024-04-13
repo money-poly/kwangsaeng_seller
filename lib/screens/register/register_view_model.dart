@@ -19,9 +19,12 @@ enum TimeType { open, close }
 
 class RegisterViewModel with ChangeNotifier {
   final StoreService _service = StoreService();
-  final formKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
   late StoreUpdateViewType _viewMode;
   StoreDetail? _initialStore;
+
+  GlobalKey<FormState> get formKey => _formKey;
+  StoreUpdateViewType get viewMode => _viewMode;
 
   /* ViewMode edit 에서만 사용 */
   String? _storeImg;
@@ -161,32 +164,25 @@ class RegisterViewModel with ChangeNotifier {
 
   void initListener() {
     _startDateController.addListener(() {
-      // [주의] 가게 등록에서만 입력되는 값
-      checkAreValidRegister();
+      checkAreValid();
     });
     _nameController.addListener(() {
-      checkAreValidRegister();
-      checkAreValidModify();
+      checkAreValid();
     });
     _storeNameController.addListener(() {
-      checkAreValidRegister();
-      checkAreValidModify();
+      checkAreValid();
     });
     _phoneController.addListener(() {
-      checkAreValidRegister();
-      checkAreValidModify();
+      checkAreValid();
     });
     _businessNumberController.addListener(() {
-      checkAreValidRegister();
-      checkAreValidModify();
+      checkAreValid();
     });
     _addressController.addListener(() {
-      checkAreValidRegister();
-      checkAreValidModify();
+      checkAreValid();
     });
     _categoryController.addListener(() {
-      checkAreValidRegister();
-      checkAreValidModify();
+      checkAreValid();
     });
   }
 
@@ -308,7 +304,8 @@ class RegisterViewModel with ChangeNotifier {
     checkValidPhone();
     checkValidOperationTime();
 
-    if (formKey.currentState!.validate() && _isValidOperationTime) {
+    if ((_formKey.currentState == null || _formKey.currentState!.validate()) &&
+        _isValidOperationTime) {
       _areValidRegister = true;
     } else {
       _areValidRegister = false;
@@ -320,12 +317,21 @@ class RegisterViewModel with ChangeNotifier {
     checkValidPhone();
     checkValidOperationTime();
 
-    if (formKey.currentState!.validate() && _isValidOperationTime) {
+    if ((_formKey.currentState == null || _formKey.currentState!.validate()) &&
+        _isValidOperationTime) {
       _areValidModify = true;
     } else {
       _areValidModify = false;
     }
     notifyListeners();
+  }
+
+  void checkAreValid() {
+    if (_viewMode == StoreUpdateViewType.register) {
+      checkAreValidRegister();
+    } else {
+      checkAreValidModify();
+    }
   }
 
   /* 가게 등록 및 수정 */
