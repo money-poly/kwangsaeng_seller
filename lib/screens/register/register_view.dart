@@ -121,24 +121,28 @@ class RegisterView extends StatelessWidget {
                                 maxLength: 10,
                               ),
                               const SizedBox(height: 20),
-                              const TextFieldTitle(title: "개업일자"),
-                              CustomTextField(
-                                controller: viewModel.startDateController,
-                                hintText: "YYYYMMDD",
-                                validator: (input) {
-                                  if (input.isEmpty) {
-                                    return "날짜를 입력해주세요";
-                                  } else {
-                                    final date = dateValidator(input);
-                                    if (date == null) {
-                                      return "올바른 날짜를 입력해주세요";
+                              if (viewModel.viewMode ==
+                                  StoreUpdateViewType.register)
+                                const TextFieldTitle(title: "개업일자"),
+                              if (viewModel.viewMode ==
+                                  StoreUpdateViewType.register)
+                                CustomTextField(
+                                  controller: viewModel.startDateController,
+                                  hintText: "YYYYMMDD",
+                                  validator: (input) {
+                                    if (input.isEmpty) {
+                                      return "날짜를 입력해주세요";
+                                    } else {
+                                      final date = dateValidator(input);
+                                      if (date == null) {
+                                        return "올바른 날짜를 입력해주세요";
+                                      }
                                     }
-                                  }
-                                  return null;
-                                },
-                                keyboardType: TextInputType.number,
-                                maxLength: 8,
-                              ),
+                                    return null;
+                                  },
+                                  keyboardType: TextInputType.number,
+                                  maxLength: 8,
+                                ),
                               const SizedBox(height: 20),
                               const TextFieldTitle(title: "업체 카테고리"),
                               GestureDetector(
