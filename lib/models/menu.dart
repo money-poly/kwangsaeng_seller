@@ -67,7 +67,7 @@ class Menu extends Equatable {
         id: json['id'],
         name: json['name'],
         discountRate: json['discountRate'],
-        discountPrice: json['salePrice'],
+        discountPrice: json['sellingPrice'],
         status: strToMenuStatus(json['status']),
         /* Optional */
         imgUrl: json['menuPictureUrl'],
@@ -159,3 +159,4 @@ class MenuDetail {
         description: json['description'],
       );
 }
+

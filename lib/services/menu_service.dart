@@ -47,22 +47,6 @@ class MenuService {
       String expiredDate,
       String? imgUrl) async {
     final prefs = await SharedPreferences.getInstance();
-    // print(
-    //   jsonEncode({
-    //     "storeId": int.parse(prefs.getString("storeId")!),
-    //     // "menuPictureUrl": img,
-    //     // category,
-    //     "name": name,
-    //     "status": "hidden",
-    //     "price": regularPrice,
-    //     "salePrice": discountPrice,
-    //     "discountRate": discountRate,
-    //     /* Optional */
-    //     "description": description,
-    //     "countryOfOrigin": origins.map((e) => e.toJson()).toList(),
-    //   }),
-    // );
-
     final res = await _api.req("/menus", HttpMethod.post,
         body: jsonEncode({
           "storeId": int.parse(prefs.getString("storeId")!),
@@ -71,7 +55,7 @@ class MenuService {
           "name": name,
           "status": "sale",
           "price": regularPrice,
-          "salePrice": discountPrice,
+          "sellingPrice": discountPrice,
           "discountRate": discountRate,
           "description": description,
           "expiredDate": expiredDate,
