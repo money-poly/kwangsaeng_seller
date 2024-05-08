@@ -12,7 +12,6 @@ import 'package:kwangsaeng_seller/widgets/loading_page.dart';
 import 'package:kwangsaeng_seller/widgets/textfield_title.dart';
 import 'package:kwangsaeng_seller/styles/color.dart';
 import 'package:kwangsaeng_seller/styles/txt.dart';
-import 'package:kwangsaeng_seller/utils.dart/phone_number_formatter.dart';
 import 'package:kwangsaeng_seller/widgets/custom_textfield.dart';
 import 'package:provider/provider.dart';
 
@@ -81,7 +80,6 @@ class JoinView extends StatelessWidget {
                               maxLength: 11,
                               keyboardType: TextInputType.phone,
                               inputFormatters: [
-                                PhoneNumberFormatter(),
                                 FilteringTextInputFormatter.digitsOnly
                               ],
                               readOnly: viewModel.authStatus !=
